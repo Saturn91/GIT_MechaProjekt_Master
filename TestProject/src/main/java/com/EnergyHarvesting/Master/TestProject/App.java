@@ -22,6 +22,7 @@ public class App
     {
     	//Setup Gui
     	GUI gui = new GUI();
+    	gui.setVisible(true);
     	
     	 //LED_PRG
         button1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_07);
