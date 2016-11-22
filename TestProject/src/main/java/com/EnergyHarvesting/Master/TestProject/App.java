@@ -18,14 +18,35 @@ public class App
     public static void main( String[] args )
     {
         button1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_07);
-        if(button1.isHigh()){
-        	System.out.println("is High");
-        }else{
-        	if(button1.isLow()){
-        		System.out.println("is Low");
-        	}else{
-        		System.out.println("no data!");
-        	}        	
+                
+        while(true){
+        	if(button1.isHigh()){
+            	System.out.println("is High");
+            	try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }else{
+            	if(button1.isLow()){
+            		System.out.println("is Low");
+            		try {
+    					Thread.sleep(500);
+    				} catch (InterruptedException e) {
+    					// TODO Auto-generated catch block
+    					e.printStackTrace();
+    				}
+            	}else{
+            		System.out.println("no data!");
+            		try {
+    					Thread.sleep(500);
+    				} catch (InterruptedException e) {
+    					// TODO Auto-generated catch block
+    					e.printStackTrace();
+    				}
+            	}        	
+            }
         }
     }
 }
