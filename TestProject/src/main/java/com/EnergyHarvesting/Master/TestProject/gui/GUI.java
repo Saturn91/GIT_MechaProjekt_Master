@@ -10,14 +10,24 @@ import javax.swing.*;
 
 public class GUI extends JFrame {
 	
+	//-----------------Swing---------------
 	private static final long serialVersionUID = 1L;
+	
+	//------------Window Config------------
+	private static final String title = "Energie Harvesting Project - Master";
+	
+	private static final int width = 1020;
+	private static final int height = 720;
+	private static final int xPos = 50;
+	private static final int yPos = 50;
+	//-----------\Window Config-------------
 	
 	private CostumPanel panel = new CostumPanel();
 
 	public GUI() {
-		setTitle("Energie Harvesting Project - Master");
-		setSize(1020,720);
-		setLocation(50,50);
+		setTitle(title);
+		setSize(width,height);
+		setLocation(xPos, yPos);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		add(panel);
