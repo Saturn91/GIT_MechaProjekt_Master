@@ -12,5 +12,6 @@ public class App
     {
         GUI gui = new GUI();
         gui.setVisible(true);
+        gui.setTextBox("Yeah!");
     }
 }
