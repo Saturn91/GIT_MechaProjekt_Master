@@ -30,11 +30,6 @@ public class CostumPanel extends JPanel{
 
 		//Create tool tips, for the heck of it.
 		testLabel.setToolTipText("A label containing only text");
-		int[] x = {1, 20};
-		int[] y = {1, 20};
-
-		paint(graph.getGraphics(),x, y);
-		add(graph);
 		add(testLabel);
 	}
 
