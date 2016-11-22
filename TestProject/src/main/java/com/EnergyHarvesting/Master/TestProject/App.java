@@ -11,6 +11,11 @@ import com.pi4j.io.gpio.RaspiPin;
 
 public class App 
 {
+	
+	private static GpioPinDigitalInput button1;
+	private static GpioPinDigitalOutput led1;
+	private static GpioController gpio = GpioFactory.getInstance();
+	
     public static void main( String[] args )
     {
 
