@@ -1,19 +1,18 @@
 package com.EnergyHarvesting.Master.TestProject;
 
 import com.EnergyHarvesting.Master.TestProject.gui.GUI;
-
+import com.EnergyHarvesting.Master.TestProject.spi.SPI_Manager;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
 import com.pi4j.io.gpio.RaspiPin;
 
+import controler.Controler;
+
 
 public class App 
 {
-	
-	private static GpioPinDigitalInput button1;
-	private static GpioPinDigitalOutput led1;
 	private static GpioController gpio = GpioFactory.getInstance();
 	
     public static void main( String[] args )
@@ -22,28 +21,21 @@ public class App
     	//Setup Gui
     	GUI gui = new GUI();
     	gui.setVisible(true);
-    	
-    	 //LED_PRG
-        button1 = gpio.provisionDigitalInputPin(RaspiPin.GPIO_07);
-        led1 = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_01);
         
-       
-        boolean toggle = false;
+        //Setup Controler
+        Controler controler = new Controler();
         
+        //Main loop of application
         while(true){
-        	if(button1.isHigh() &! toggle){
-            	System.out.println("is High");
-            	led1.setState(true);
-            	gui.setTextBox("is High");
-            	toggle = true;
-            }else{
-            	if(button1.isLow() && toggle){
-            		System.out.println("is Low");
-            		led1.setState(false);
-            		gui.setTextBox("is Low");
-            		toggle = false;
-            	}            	        	
-            }
+        	//---------read SPI-Data-----------
+        	byte[] data = SPI_Manager.read();
+        	controler.handleData(data);
+        	
+        	//-------Calculate new Graphs-------
+        	controler.calcul();
+        	
+        	//------Display Changes in Guy------
+        	gui.setData(controler);
         }
     }
 }
