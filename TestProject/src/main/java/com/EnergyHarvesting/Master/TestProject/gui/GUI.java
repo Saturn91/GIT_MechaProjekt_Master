@@ -2,7 +2,7 @@ package com.EnergyHarvesting.Master.TestProject.gui;
 
 import javax.swing.*;
 
-import controler.Controler;
+import controler.Controller;
 
 /**
  * GUI Class -> View of our application
@@ -39,7 +39,7 @@ public class GUI extends JFrame {
 		panel.setLabelText(text);
 	}
 	
-	public void setData(Controler controler){
+	public void setData(Controller controler){
 		//TODO get Data from controler
 	}
 

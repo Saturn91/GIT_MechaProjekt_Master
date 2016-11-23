@@ -1,11 +1,16 @@
 package controler;
 
+/**
+ * Point, holds Data for one message sended by a slave 
+ * @author M.Geissbberger
+ *
+ */
 public class Point {
-	public int x;
-	public int y;
+	public int value;
+	public long time;
 	
-	public Point(int x, int y) {
-		this.x = x;
-		this.y = y;
+	public Point(int value, long time) {
+		this.time = time;
+		this.value = value;
 	}
 }
