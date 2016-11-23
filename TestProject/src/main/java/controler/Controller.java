@@ -41,7 +41,7 @@ public class Controller {
 		return graphs;
 	}
 	
-	public void save(){
+	public void save(String fileName){
 		//TODO save Graphs
 	}
 	

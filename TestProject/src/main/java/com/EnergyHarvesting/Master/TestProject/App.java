@@ -3,7 +3,7 @@
  * ProjectName: EnergyHervesting-Master
  * Author:		M.Geissberger alias Saturn91
  * Hardware:	RaspberryPI 2B+ 1.1
- * Git: https://github.com/Saturn91/GIT_MechaProjekt_Master (private)
+ * Github: https://github.com/Saturn91/GIT_MechaProjekt_Master (private)
  * --------------------------------------------------------------------------------------------------
  * Description:
  * 
@@ -20,6 +20,10 @@
 
 package com.EnergyHarvesting.Master.TestProject;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import com.EnergyHarvesting.Master.TestProject.gui.GUI;
 import com.EnergyHarvesting.Master.TestProject.spi.SPI_Manager;
 import com.pi4j.io.gpio.GpioController;
@@ -35,27 +39,37 @@ import controler.Controller;
  * @author M.Geissbberger
  *
  */
-
 public class App 
 {
 	//---------Config-----------
 	private static int saveTimeMIN = 5;
+	private static String fileName = "logFile.txt";
 	//--------\Config-----------
 	
-	
-	private static final int calculateStoMin = 60000;
+	//---------Time/Date--------
+	private static DateFormat dateFormat;
+	private static Date date;
+	private static final int calculateMStoMin = 60000;
+	//--------\TimeDate--------
 	
     public static void main( String[] args )
     {
-
+    	//SetupTime
+    	dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    	
     	//Setup Gui
-    	GUI gui = new GUI();
-    	gui.setVisible(true);
+    	boolean withGui = args[0].equals("true");
+    	GUI gui = null;    	
+    	if(withGui){
+    		gui = new GUI();
+        	gui.setVisible(true);
+    	}
+    	
         
         //Setup Controller
         Controller controller = new Controller();
         
-        //Main loop of application
+        //Main loop of application (exit if windows get closed
         while(true){
         	//---------read SPI-Data-----------
         	byte[] data = SPI_Manager.read();
@@ -65,7 +79,9 @@ public class App
         	controller.calculate();
         	
         	//------Display Changes in Gui------
-        	gui.setData(controller);
+        	if(withGui){
+        		gui.setData(controller);
+        	}        	
         	
         	//---save Data after n-minutes------
         	save(saveTimeMIN, controller);
@@ -73,19 +89,26 @@ public class App
     }
     
     private static long lastTime = 0;
+    private static long nowTime;
     /**
      * void: save(n-minutes, controller)
      * saves the Data stored in Controller all  n-minutes with controller.save()
      */    
     private static void save(int deltaMin, Controller controller){
-    	long nowTime = System.currentTimeMillis();
+    	nowTime = System.currentTimeMillis();
     	if(lastTime == 0){
     		lastTime = nowTime;
     	}
-    	if((nowTime - lastTime)/calculateStoMin >= deltaMin){
-    		controller.save();
+    	if((nowTime - lastTime)/calculateMStoMin >= deltaMin){
+    		controller.save(fileName);
+    		System.out.println();
+    		date = new Date(nowTime);
+    		System.out.println("["+dateFormat.format(date)+"]: saved Data to " + fileName); 	//print saveData
     		lastTime = nowTime;
-    	}
-    	
+    	}    	
+    }
+    
+    public String getDate(){
+    	return dateFormat.format(new Date(nowTime));
     }
 }
