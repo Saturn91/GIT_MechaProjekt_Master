@@ -24,18 +24,22 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import logger.Log;
+import nrf24_Reciver.NRF24_Dummy;
+import nrf24_Reciver.NRF24_ReciverInterface;
+
 import com.EnergyHarvesting.Master.TestProject.gui.GUI;
-import com.EnergyHarvesting.Master.TestProject.spi.SPI_Manager;
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalInput;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.RaspiPin;
 
 import controler.Controller;
 
 /**
  * Main Application, which runs on a RaspberryPI
+ * 
+ * args[]:
+ * 	1: with or without gui? | 1 or 0
+ * 	2: debug?				| 1 or 0
+ *  3: write Log file?		| 1 or 0
+ *  4: time between saves	| 0 ... n minutes [int]
  * @author M.Geissbberger
  *
  */
@@ -43,38 +47,74 @@ public class App
 {
 	//---------Config-----------
 	private static int saveTimeMIN = 5;
-	private static String fileName = "logFile.txt";
+	private static String fileName = "DataFile.txt";
 	//--------\Config-----------
 	
 	//---------Time/Date--------
-	private static DateFormat dateFormat;
-	private static Date date;
+	private static Date date = new Date(System.currentTimeMillis());
 	private static final int calculateMStoMin = 60000;
 	//--------\TimeDate--------
 	
     public static void main( String[] args )
-    {
-    	//SetupTime
-    	dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    {    	
+    	//-------Setup Gui-------
+    	boolean withGui = false;
     	
-    	//Setup Gui
-    	boolean withGui = args[0].equals("true");
-    	GUI gui = null;    	
-    	if(withGui){
-    		gui = new GUI();
-        	gui.setVisible(true);
+    	if(args.length > 0){
+    		withGui = args[0].equals("1");
     	}
     	
+    	//-------Setup Logger--------
+    	Log.debug = false;
+    	Log.writeLogFile = false;
+    	
+    	if(args.length > 1){
+    		withGui = args[1].equals("1");
+    		Log.debug = args[1].equals("1");
+    	}
+    	if(args.length > 2){
+    		withGui = args[2].equals("1");
+    		Log.writeLogFile = args[2].equals("1");
+    	}
+    	
+    	if(args.length > 3){
+    		try {
+    			saveTimeMIN = Integer.parseInt(args[3]);
+			} catch (Exception e) {
+				Log.printErrorln("Argument 4 must be a number!");
+				System.exit(-1);
+			}
+    	}
+    	
+    	GUI gui = null;    	
+    	if(withGui){
+    		Log.printInfoln("Try to start with GUI");
+    		try {
+    			gui = new GUI();
+            	gui.setVisible(true);
+			} catch (Exception e) {
+				withGui = false;
+				Log.printErrorln("Failed to start with GUI - starting without");
+			}    		
+    	}else{
+    		Log.printInfoln("Start without GUI");
+    	}
+    	
+    	//Setup NRF24_Recierver
+    	NRF24_ReciverInterface nrf24Dummy = new NRF24_Dummy();
+    	nrf24Dummy.init();
         
         //Setup Controller
         Controller controller = new Controller();
         
-        //Main loop of application (exit if windows get closed
+        Log.printInfoln("------started Masterprogram!-------", true);
+        
+        //Main loop of application (exits if program or window gets closed)
         while(true){
         	//---------read SPI-Data-----------
-        	byte[] data = SPI_Manager.read();
+        	byte[] data = nrf24Dummy.getData();
         	controller.handleData(data);
-        	
+        	        	
         	//-------Calculate new Data---------
         	controller.calculate();
         	
@@ -101,14 +141,15 @@ public class App
     	}
     	if((nowTime - lastTime)/calculateMStoMin >= deltaMin){
     		controller.save(fileName);
-    		System.out.println();
     		date = new Date(nowTime);
-    		System.out.println("["+dateFormat.format(date)+"]: saved Data to " + fileName); 	//print saveData
+    		Log.printInfoln("saved Data to " + fileName, true); 	//print saveData
     		lastTime = nowTime;
     	}    	
     }
     
-    public String getDate(){
-    	return dateFormat.format(new Date(nowTime));
+    public static String getDate(){
+    	nowTime = System.currentTimeMillis();
+    	date.setTime(nowTime);
+    	return new SimpleDateFormat("dd:MM:yy : HH:mm:ss").format(date);
     }
 }

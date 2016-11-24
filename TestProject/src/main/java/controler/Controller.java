@@ -2,6 +2,8 @@ package controler;
 
 import java.util.ArrayList;
 
+import logger.Log;
+
 /**
  * Controller calculates Averagetemperature, saves Data into a file, adds time to Data,
  * prepare the graphs for GUI
@@ -27,14 +29,13 @@ public class Controller {
 	}
 	
 	public void handleData(byte[] data){
-		if(data[0] != 0){
-			System.out.println("Controler: Handle Data: not implemented yet!");
-			//TODO add points to right graphs depending from address in Data
+		if(data != null){
+			
 		}		
 	}
 	
 	public void calculate(){
-		System.out.println("Controler: Calcul: not implemented yet!");
+		Log.printInfoln("Controller: Calcul: not implemented yet!");
 	}
 	
 	public ArrayList<Graph> getGraphs(){
