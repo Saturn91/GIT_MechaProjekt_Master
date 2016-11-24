@@ -9,6 +9,7 @@ public class Log {
 	public static boolean debug = false;
 	public static boolean writeLogFile = false;
 	public static StringBuilder logFile = new StringBuilder();
+	public static String lastLine;
 	
 	//Info
 	public static void printInfoln(String infoline){
@@ -38,6 +39,7 @@ public class Log {
 	public static void println(String log, boolean bool){
 		String logger = App.getDate() + " " + log;
 		System.out.println(logger);
+		lastLine = logger;
 		if(writeLogFile){
 			logFile.append(logger+"\n");
 		}

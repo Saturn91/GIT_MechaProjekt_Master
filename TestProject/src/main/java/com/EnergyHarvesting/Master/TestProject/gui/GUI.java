@@ -42,6 +42,10 @@ public class GUI extends JFrame {
 	public void setData(Controller controler){
 		//TODO get Data from controler
 	}
+	
+	public void setLogLine(String lastLogLine){
+		panel.setLabelText(lastLogLine);
+	}
 
 
 

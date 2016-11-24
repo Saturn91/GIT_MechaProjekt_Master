@@ -2,6 +2,7 @@ package controler;
 
 import java.util.ArrayList;
 
+import nrf24_Reciver.SensorData;
 import logger.Log;
 
 /**
@@ -16,35 +17,42 @@ import logger.Log;
  */
 public class Controller {
 	
-	private ArrayList<Graph> graphs = new ArrayList<Graph>();	//holds all Graphs with data
+	private TemperaturSensor[] sensors;
+	private String[] sensorNames = null;
 	
 	public Controller() {
-		//initialize Graphs
-		graphs.add(new Graph("Temperature1"));		//Temperature of Sensor1
-		graphs.add(new Graph("Temperature2"));		//Temperature of Sensor2
-		graphs.add(new Graph("Temperature3"));		//Temperature of Sensor3
-		graphs.add(new Graph("Voltage1"));			//Voltage of Sensor1
-		graphs.add(new Graph("Voltage2"));			//Voltage of Sensor2
-		graphs.add(new Graph("Voltage3"));			//Voltage of Sensor3
+		Log.printInfoln("----Initialize Controller!-----");
+		sensors = new TemperaturSensor[16];		//not more than 16 Sensor possibly with a byte address
 	}
 	
-	public void handleData(byte[] data){
+	public void handleData(SensorData data){
 		if(data != null){
-			
+			administrateSensors(data.getId());
+			sensors[data.getId()].addData(data.getVoltage(), data.getTemperatur());
 		}		
 	}
 	
-	public void calculate(){
-		Log.printInfoln("Controller: Calcul: not implemented yet!");
-	}
-	
-	public ArrayList<Graph> getGraphs(){
-		return graphs;
-	}
-	
 	public void save(String fileName){
-		//TODO save Graphs
+		Log.printInfoln("saved Data to " + fileName, true); 	//print saveData
 	}
 	
+	private void administrateSensors(int id){
+		if(sensors[id] == null){
+			if(sensorNames == null){
+				sensors[id] = new TemperaturSensor(id, ""+id);
+				Log.printInfoln("found new Sensor " + id, true);
+			}else{
+				sensors[id] = new TemperaturSensor(id, sensorNames[id]);
+				Log.printInfoln("found new Sensor " + sensorNames[id], true);
+			}			
+		}
+	}
 	
+	public void setSensorNames(String[] names){
+		if(names.length == 16){
+			sensorNames = names;
+		}else{
+			Log.printErrorln("---Name List must be 16 entries long!---");
+		}
+	}
 }

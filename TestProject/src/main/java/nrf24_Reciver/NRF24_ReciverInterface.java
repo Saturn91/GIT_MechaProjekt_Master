@@ -10,5 +10,5 @@ public interface NRF24_ReciverInterface {
 	 * Check if the connected NRF24 has recieved Data
 	 * @return null: no Data recieved, else Data recieved
 	 */
-	public byte[] getData();
+	public SensorData getData();
 }

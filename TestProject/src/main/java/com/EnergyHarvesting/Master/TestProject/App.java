@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import logger.Log;
 import nrf24_Reciver.NRF24_Dummy;
 import nrf24_Reciver.NRF24_ReciverInterface;
+import nrf24_Reciver.SensorData;
 
 import com.EnergyHarvesting.Master.TestProject.gui.GUI;
 
@@ -58,7 +59,7 @@ public class App
     public static void main( String[] args )
     {    	
     	//-------Setup Gui-------
-    	boolean withGui = false;
+    	boolean withGui = true;
     	
     	if(args.length > 0){
     		withGui = args[0].equals("1");
@@ -69,11 +70,9 @@ public class App
     	Log.writeLogFile = false;
     	
     	if(args.length > 1){
-    		withGui = args[1].equals("1");
     		Log.debug = args[1].equals("1");
     	}
     	if(args.length > 2){
-    		withGui = args[2].equals("1");
     		Log.writeLogFile = args[2].equals("1");
     	}
     	
@@ -112,15 +111,12 @@ public class App
         //Main loop of application (exits if program or window gets closed)
         while(true){
         	//---------read SPI-Data-----------
-        	byte[] data = nrf24Dummy.getData();
-        	controller.handleData(data);
-        	        	
-        	//-------Calculate new Data---------
-        	controller.calculate();
+        	controller.handleData(nrf24Dummy.getData());
         	
         	//------Display Changes in Gui------
         	if(withGui){
         		gui.setData(controller);
+        		gui.setLogLine(Log.lastLine);
         	}        	
         	
         	//---save Data after n-minutes------
@@ -142,7 +138,6 @@ public class App
     	if((nowTime - lastTime)/calculateMStoMin >= deltaMin){
     		controller.save(fileName);
     		date = new Date(nowTime);
-    		Log.printInfoln("saved Data to " + fileName, true); 	//print saveData
     		lastTime = nowTime;
     	}    	
     }

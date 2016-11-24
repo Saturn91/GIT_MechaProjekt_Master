@@ -2,16 +2,28 @@ package nrf24_Reciver;
 
 import logger.Log;
 
+/**
+ * Simulates the signal send by a Sensor (Address = 1);
+ * @author M.Geissbberger
+ *
+ */
 public class NRF24_Dummy implements NRF24_ReciverInterface{
 
-	public static int bytes = 4;
+	public static int bytes = 5;
 	
 	public void init() {
 		Log.println("Initialized NRF24");		
 	}
 
-	public byte[] getData() {
-		return byteSendSimulation();
+	public SensorData getData() {
+		SensorData data = null;
+		byte[] input = byteSendSimulation();
+		if(input != null){
+			float temp = ((float) ((60/256)-10))*((float) (input[1]*16+input[2]));
+			float volt = ((float) ((60/256)-10))*((float) (input[3]*16+input[4]));
+			data = new SensorData(input[0], temp, volt);
+		}
+		return data;
 	}
 	
 	private long lastTime= 0;
@@ -20,14 +32,18 @@ public class NRF24_Dummy implements NRF24_ReciverInterface{
 	private int delta = 0;
 	
 	private byte[] byteSendSimulation(){
-		byte[] data = new byte[bytes];
+		byte[] data = null;
 		nowTime = System.currentTimeMillis();
 		if(nowTime - lastTime > delta){
-			Log.printInfoln("recived Data!");
+			data = new byte[bytes];
+			Log.printInfoln("----recived Data!-----");
 			lastTime = nowTime;
 			delta = (int) (Math.random()*maxDelta);
-			for(int i = 0; i < data.length; i++){
-				data[i] = (byte) (Math.random()*15);
+			
+			data[0] = 1;	//Sensor Address
+			
+			for(int i = 1; i < data.length; i++){
+				data[i] = (byte) (Math.random()*16);
 			}
 		}
 		

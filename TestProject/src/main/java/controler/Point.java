@@ -6,10 +6,10 @@ package controler;
  *
  */
 public class Point {
-	public int value;
+	public float value;
 	public long time;
 	
-	public Point(int value, long time) {
+	public Point(float value, long time) {
 		this.time = time;
 		this.value = value;
 	}

@@ -21,6 +21,10 @@ public class Graph {
 		}
 	}
 	
+	public void addPoint(Point point){
+		this.points.add(point);
+	}
+	
 	public ArrayList<Point> getPoints(){
 		return points;
 	}
