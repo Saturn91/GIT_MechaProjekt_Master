@@ -135,6 +135,7 @@ public class App
     	}
     	if((nowTime - lastTime)/calculateMStoMin >= deltaMin){
     		controller.save(fileName);
+    		Log.saveLogFile();
     		date = new Date(nowTime);
     		lastTime = nowTime;
     	}    	

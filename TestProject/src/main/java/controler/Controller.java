@@ -1,9 +1,10 @@
 package controler;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
 import nrf24_Reciver.SensorData;
 import logger.Log;
+import logger.SaveToFile;
 
 /**
  * Controller calculates Averagetemperature, saves Data into a file, adds time to Data,
@@ -15,7 +16,7 @@ import logger.Log;
  * @author M.Geissbberger
  *
  */
-public class Controller {
+public class Controller implements Serializable{
 	
 	private TemperaturSensor[] sensors;
 	private String[] sensorNames = null;
@@ -34,6 +35,7 @@ public class Controller {
 	
 	public void save(String fileName){
 		Log.printInfoln("saved Data to " + fileName, true); 	//print saveData
+		SaveToFile.saveToBinaryFile(fileName, this);
 	}
 	
 	private void administrateSensors(int id){

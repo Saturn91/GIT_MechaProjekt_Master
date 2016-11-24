@@ -31,9 +31,6 @@ public class Log {
 		if(debug){
 			System.out.println(logger);
 		}	
-		if(writeLogFile){
-			logFile.append(logger+"\n");
-		}
 	}
 	
 	public static void println(String log, boolean bool){
@@ -67,7 +64,8 @@ public class Log {
 	
 	public static void saveLogFile(){
 		if(writeLogFile){
-			println("Save LogFile is not implemented yet!");
+			printInfoln("------Saved Logfile-------", true);
+			SaveToFile.saveToTextFile("LogFile.log", logFile.toString());
 		}else{
 			System.err.println("Not able to Save LogFile: writeLogFile = false");
 		}

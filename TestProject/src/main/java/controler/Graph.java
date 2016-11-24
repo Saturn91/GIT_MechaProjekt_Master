@@ -1,5 +1,6 @@
 package controler;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  * @author M.Geissbberger
  *
  */
-public class Graph {
+public class Graph implements Serializable{
 	private ArrayList<Point> points = new ArrayList<Point>();
 	private String title;
 	

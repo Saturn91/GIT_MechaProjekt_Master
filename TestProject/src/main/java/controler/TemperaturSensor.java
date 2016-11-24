@@ -1,6 +1,8 @@
 package controler;
 
-public class TemperaturSensor {
+import java.io.Serializable;
+
+public class TemperaturSensor implements Serializable{
 	private Graph temperatur;
 	private Graph voltage;
 	private int address;
