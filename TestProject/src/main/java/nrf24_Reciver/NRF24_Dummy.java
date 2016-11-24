@@ -12,7 +12,7 @@ public class NRF24_Dummy implements NRF24_ReciverInterface{
 	public static int bytes = 5;
 	
 	public void init() {
-		Log.println("Initialized NRF24");		
+		Log.printInfoln("Initialized NRF24", true);		
 	}
 
 	public SensorData getData() {
