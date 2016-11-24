@@ -2,6 +2,8 @@ package com.EnergyHarvesting.Master.TestProject.gui;
 
 import javax.swing.*;
 
+import controler.Controller;
+
 /**
  * GUI Class -> View of our application
  * @author M.Geissbberger
@@ -35,6 +37,14 @@ public class GUI extends JFrame {
 	
 	public void setTextBox(String text){
 		panel.setLabelText(text);
+	}
+	
+	public void setData(Controller controler){
+		//TODO get Data from controler
+	}
+	
+	public void setLogLine(String lastLogLine){
+		panel.setLabelText(lastLogLine);
 	}
 
 
