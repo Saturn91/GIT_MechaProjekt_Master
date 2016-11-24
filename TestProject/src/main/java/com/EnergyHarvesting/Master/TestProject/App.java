@@ -21,13 +21,11 @@
 package com.EnergyHarvesting.Master.TestProject;
 
 import java.sql.Date;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import logger.Log;
 import nrf24_Reciver.NRF24_Dummy;
 import nrf24_Reciver.NRF24_ReciverInterface;
-import nrf24_Reciver.SensorData;
 
 import com.EnergyHarvesting.Master.TestProject.gui.GUI;
 
