@@ -1,5 +1,7 @@
 package com.EnergyHarvesting.Master.TestProject.gui;
 
+import java.awt.BorderLayout;
+
 import javax.swing.*;
 
 import controler.Controller;
@@ -18,33 +20,51 @@ public class GUI extends JFrame {
 	//------------Window Config------------
 	private static final String title = "Energie Harvesting Project - Master";
 	
-	private static final int width = 1020;
-	private static final int height = 720;
+	private static final int width = 1350;
+	private static final int height = 900;
 	private static final int xPos = 50;
 	private static final int yPos = 50;
 	//-----------\Window Config-------------
 	
-	private CostumPanel panel = new CostumPanel();
+	private static MainPanel panel = new MainPanel(0, 0, 1350, 900);
 
 	public GUI() {
+		
+	}
+	
+	public void init(){
 		setTitle(title);
 		setSize(width,height);
 		setLocation(xPos, yPos);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		setResizable(false);
 		add(panel);
-	}
-	
-	public void setTextBox(String text){
-		panel.setLabelText(text);
+		panel.init();
+		panel.setBounds();
+		setVisible(true);
+		
 	}
 	
 	public void setData(Controller controler){
-		//TODO get Data from controler
+		panel.setData(controler);
 	}
 	
-	public void setLogLine(String lastLogLine){
-		panel.setLabelText(lastLogLine);
+	public static void appendLogLine(String lastLogLine, int type){
+		switch (type){
+		default: 
+				panel.addCMD_Line(lastLogLine);
+				break;
+		case 1: 
+				panel.addCMD_Info_Line(lastLogLine);
+				break;
+		case -1: 
+			panel.addCMD_Error_Line(lastLogLine);
+			break;
+		}		
+	}
+	
+	public void update(){
+		panel.update();
 	}
 
 

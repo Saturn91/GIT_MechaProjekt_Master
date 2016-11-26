@@ -47,6 +47,7 @@ public class App
 	//---------Config-----------
 	private static int saveTimeMIN = 5;
 	private static String fileName = "DataFile.txt";
+	private static boolean withGui = false;
 	//--------\Config-----------
 	
 	//---------Time/Date--------
@@ -57,7 +58,7 @@ public class App
     public static void main( String[] args )
     {    	
     	//-------Setup Gui-------
-    	boolean withGui = true;
+    	withGui = true;
     	
     	if(args.length > 0){
     		withGui = args[0].equals("1");
@@ -78,19 +79,19 @@ public class App
     		try {
     			saveTimeMIN = Integer.parseInt(args[3]);
 			} catch (Exception e) {
-				Log.printErrorln("Argument 4 must be a number!");
+				System.err.println("Argument 4 must be a number!");
 				System.exit(-1);
 			}
     	}
     	
     	GUI gui = null;    	
     	if(withGui){
-    		Log.printInfoln("Try to start with GUI");
     		try {
     			gui = new GUI();
-            	gui.setVisible(true);
+            	gui.init();
 			} catch (Exception e) {
 				withGui = false;
+				Log.printErrorln(e.getMessage());
 				Log.printErrorln("Failed to start with GUI - starting without");
 			}    		
     	}else{
@@ -104,7 +105,7 @@ public class App
         //Setup Controller
         Controller controller = new Controller();
         
-        Log.printInfoln("------started Masterprogram!-------", true);
+        Log.printInfoln("started Masterprogram!", true);
         
         //Main loop of application (exits if program or window gets closed)
         while(true){
@@ -114,7 +115,7 @@ public class App
         	//------Display Changes in Gui------
         	if(withGui){
         		gui.setData(controller);
-        		gui.setLogLine(Log.lastLine);
+        		gui.update();
         	}        	
         	
         	//---save Data after n-minutes------
@@ -145,5 +146,9 @@ public class App
     	nowTime = System.currentTimeMillis();
     	date.setTime(nowTime);
     	return new SimpleDateFormat("dd:MM:yy : HH:mm:ss").format(date);
+    }
+    
+    public static boolean isWithGui(){
+    	return withGui;
     }
 }
