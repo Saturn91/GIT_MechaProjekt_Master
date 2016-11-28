@@ -85,7 +85,7 @@ public class Log {
 	
 	public static void saveLogFile(){
 		if(writeLogFile){
-			printInfoln("------Saved Logfile-------", true);
+			printInfoln("Saved Logfile", true);
 			SaveToFile.saveToTextFile("LogFile.log", logFile.toString());
 		}else{
 			System.err.println("Not able to Save LogFile: writeLogFile = false");
