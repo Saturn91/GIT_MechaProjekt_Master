@@ -22,7 +22,7 @@ public class Controller implements Serializable{
 	private String[] sensorNames = null;
 	
 	public Controller() {
-		Log.printInfoln("----Initialize Controller!-----");
+		Log.printInfoln("Initialize Controller!");
 		sensors = new TemperaturSensor[16];		//not more than 16 Sensor possibly with a byte address
 	}
 	
@@ -54,7 +54,7 @@ public class Controller implements Serializable{
 		if(names.length == 16){
 			sensorNames = names;
 		}else{
-			Log.printErrorln("---Name List must be 16 entries long!---");
+			Log.printErrorln("Name List must be 16 entries long!");
 		}
 	}
 }

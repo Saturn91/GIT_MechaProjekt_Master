@@ -36,7 +36,7 @@ public class NRF24_Dummy implements NRF24_ReciverInterface{
 		nowTime = System.currentTimeMillis();
 		if(nowTime - lastTime > delta){
 			data = new byte[bytes];
-			Log.printInfoln("----recived Data!-----");
+			Log.println("recived Data!");
 			lastTime = nowTime;
 			delta = (int) (Math.random()*maxDelta);
 			
