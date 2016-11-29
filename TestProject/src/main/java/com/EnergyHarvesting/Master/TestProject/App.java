@@ -45,7 +45,7 @@ import controler.Controller;
 public class App 
 {
 	//---------Config-----------
-	private static int saveTimeMIN = 5;
+	public static int saveTimeMIN = 5;
 	private static String fileName = "DataFile.txt";
 	private static boolean withGui = false;
 	//--------\Config-----------
