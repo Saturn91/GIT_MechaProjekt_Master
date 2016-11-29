@@ -41,8 +41,8 @@ public class Controller implements Serializable{
 	private void administrateSensors(int id){
 		if(sensors[id] == null){
 			if(sensorNames == null){
-				sensors[id] = new TemperaturSensor(id, ""+id);
-				Log.printInfoln("found new Sensor " + id, true);
+				sensors[id] = new TemperaturSensor(id, "Sensor"+id);
+				Log.printInfoln("found new Sensor Address=" + id, true);
 			}else{
 				sensors[id] = new TemperaturSensor(id, sensorNames[id]);
 				Log.printInfoln("found new Sensor " + sensorNames[id], true);
@@ -56,5 +56,9 @@ public class Controller implements Serializable{
 		}else{
 			Log.printErrorln("Name List must be 16 entries long!");
 		}
+	}
+	
+	public TemperaturSensor[] getSensors(){
+		return sensors;
 	}
 }

@@ -3,11 +3,13 @@ package controler;
 import java.io.Serializable;
 
 public class TemperaturSensor implements Serializable{
+	private String name;
 	private Graph temperatur;
 	private Graph voltage;
 	private int address;
 	
 	public TemperaturSensor(int address, String name) {
+		this.name = name;
 		this.temperatur  = new Graph(name + ": Voltage");
 		this.voltage = new Graph(name + ": Temperatur");
 		this.address = address;
@@ -28,6 +30,10 @@ public class TemperaturSensor implements Serializable{
 	
 	public int getAddress(){
 		return address;
+	}
+	
+	public String getName(){
+		return name;
 	}
 	
 	
