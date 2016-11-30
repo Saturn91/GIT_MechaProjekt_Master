@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import nrf24_Reciver.SensorData;
 import logger.Log;
-import logger.SaveToFile;
+import com.saturn91.saveToFile.SaveToFile;
 
 /**
  * Controller calculates Averagetemperature, saves Data into a file, adds time to Data,
