@@ -13,19 +13,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.0.2</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<mainClass>com.EnergyHarvesting.Master.TestProject.App</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.0.0</version>
 				<configuration>
@@ -69,6 +56,11 @@
 			<groupId>com.pi4j</groupId>
 			<artifactId>pi4j-core</artifactId>
 			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.saturn91</groupId>
+			<artifactId>save-api</artifactId>
+			<version>v1.0</version>
 		</dependency>
 	</dependencies>
 </project>

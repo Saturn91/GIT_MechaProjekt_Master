@@ -41,7 +41,31 @@ public class SettingPanel extends PanelComponent{
 
 	@Override
 	public void update() {
-		
+				
+	}
+	
+	private String lastSaveTimeString = "";
+	private void updateSaveTime(){
+		if(!lastSaveTimeString.equals(saveTime.getText())){
+			String output = "";
+			int saveTimeNum = 0;
+			try {
+				saveTimeNum = Integer.parseInt(saveTime.getText());
+				if(saveTimeNum != 0){
+					App.saveTimeMIN = saveTimeNum;
+					output = saveTime.getText();
+					Log.printInfoln("changed Time between saves to " + saveTimeNum + "min", true);
+				}else{
+					output = "INVALID";
+					Log.printErrorln("can't change Time between saves to " + saveTimeNum);
+				}
+			} catch (Exception e) {
+				Log.printErrorln("SettingPanel: Time between saves: input is not a number!");
+				output = "INVALID";
+			}
+			lastSaveTimeString = output;
+			saveTime.setText(output);
+		}		
 	}
 	
 	private void initDebug(int x, int y){
@@ -75,9 +99,9 @@ public class SettingPanel extends PanelComponent{
 		logFile.addItemListener(new ItemListener() {
 			
 			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED) {//checkbox has been selected
+				if(e.getStateChange() == ItemEvent.SELECTED) {	//checkbox has been selected
 		            Log.writeLogFile = true;
-		        } else {//checkbox has been deselected
+		        } else {										//checkbox has been deselected
 		        	Log.writeLogFile = false;
 		        };				
 			}
@@ -86,12 +110,18 @@ public class SettingPanel extends PanelComponent{
 	
 	private void initSaveTime(int x, int y, String text){
 		saveTime = new JTextField(text);
+		
 		saveTimeLabel = new JLabel("time between saves [min]:");
+		saveTime.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateSaveTime();
+			}
+		});
 		
 		add(saveTime);
 		add(saveTimeLabel);
 		
-		saveTime.setBounds(x+x_Devider1+10, y, 20, 20);
-		saveTimeLabel.setBounds(x, y, x_Devider1, 20);	
+		saveTime.setBounds(x+x_Devider1+15, y, 40, 20);
+		saveTimeLabel.setBounds(x, y, x_Devider1, 20);		
 	}
 }
