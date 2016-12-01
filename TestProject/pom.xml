@@ -62,5 +62,10 @@
 			<artifactId>save-api</artifactId>
 			<version>v1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.saturn91</groupId>
+			<artifactId>jgraph</artifactId>
+			<version>v1.0</version>
+		</dependency>
 	</dependencies>
 </project>
