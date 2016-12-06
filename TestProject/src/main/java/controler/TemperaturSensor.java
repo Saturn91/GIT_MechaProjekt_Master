@@ -7,6 +7,7 @@ public class TemperaturSensor implements Serializable{
 	private Graph temperatur;
 	private Graph voltage;
 	private int address;
+	private boolean newData = false;
 	
 	public TemperaturSensor(int address, String name) {
 		this.name = name;
@@ -18,7 +19,9 @@ public class TemperaturSensor implements Serializable{
 	public void addData(float voltage, float temperatur){
 		this.temperatur.addPoint(new Point(temperatur, System.currentTimeMillis()));
 		this.voltage.addPoint(new Point(voltage, System.currentTimeMillis()));
+		this.newData = true;
 	}
+	
 	
 	public Graph getTemperatur(){
 		return temperatur;
@@ -34,6 +37,14 @@ public class TemperaturSensor implements Serializable{
 	
 	public String getName(){
 		return name;
+	}
+	
+	public boolean hasNewData(){
+		return newData;
+	}
+	
+	public void resetNewData(){
+		newData = false;
 	}
 	
 	

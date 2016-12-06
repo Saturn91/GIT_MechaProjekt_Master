@@ -21,12 +21,17 @@ public class Controller implements Serializable{
 	private TemperaturSensor[] sensors;
 	private String[] sensorNames = null;
 	
+	private static long startTime = 0;
+	
 	public Controller() {
 		Log.printInfoln("Initialize Controller!");
 		sensors = new TemperaturSensor[16];		//not more than 16 Sensor possibly with a byte address
 	}
 	
 	public void handleData(SensorData data){
+		if(startTime == 0){
+			startTime = System.currentTimeMillis();
+		}
 		if(data != null){
 			administrateSensors(data.getId());
 			sensors[data.getId()].addData(data.getVoltage(), data.getTemperatur());
@@ -60,5 +65,9 @@ public class Controller implements Serializable{
 	
 	public TemperaturSensor[] getSensors(){
 		return sensors;
+	}
+	
+	public static long getStartTime(){
+		return startTime;
 	}
 }
