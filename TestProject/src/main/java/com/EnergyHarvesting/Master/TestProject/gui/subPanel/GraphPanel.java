@@ -43,7 +43,8 @@ public class GraphPanel extends PanelComponent{
 		temperature.setySeperator(12);
 		temperature.setGraphNameTextSize(10);
 		temperature.setxAxisText("[h]");
-		temperature.setyAxisText("Temperature [C°]");
+		temperature.setyAxisText("[C°]");
+		temperature.setDotSize(10);
 		temperature.setArrowSize(5);
 		add(temperature);
 
@@ -55,7 +56,8 @@ public class GraphPanel extends PanelComponent{
 		voltage.setySeperator(10);
 		voltage.setGraphNameTextSize(10);
 		voltage.setxAxisText("[h]");
-		voltage.setyAxisText("Volt [V]");
+		voltage.setyAxisText("[V]");
+		voltage.setDotSize(10);
 		voltage.setArrowSize(5);
 		add(voltage);
 	}
