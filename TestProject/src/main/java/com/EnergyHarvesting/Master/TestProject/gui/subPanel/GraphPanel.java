@@ -2,6 +2,7 @@ package com.EnergyHarvesting.Master.TestProject.gui.subPanel;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -12,14 +13,16 @@ import controler.Controller;
 import controler.TemperaturSensor;
 
 public class GraphPanel extends PanelComponent{
-	
+
 	private Controller controller;
-	
+
 	private JGraph temperature;
 	private JGraph voltage;
-	
+
 	private int width;
 	private int height;
+
+	private TemperaturSensor[] sensors;
 
 	public GraphPanel(int x, int y, int width, int height) {
 		super(x, y, width, height);
@@ -43,7 +46,7 @@ public class GraphPanel extends PanelComponent{
 		temperature.setyAxisText("Temperature [C°]");
 		temperature.setArrowSize(5);
 		add(temperature);
-		
+
 		voltage = new JGraph("Voltage", (width/2)+5, 10, (width/2)-20, height-20);
 		voltage.setBorder(50);
 		voltage.setMinValue(0, 0);
@@ -59,9 +62,22 @@ public class GraphPanel extends PanelComponent{
 
 	@Override
 	public void update() {
-		
+		sensors = controller.getSensors();
+
+		for(int i = 0; i < sensors.length; i++){
+			if(sensors[i]!=null){
+				if(sensors[i].hasNewData()){
+					int index = sensors[i].getTemperatur().getPoints().size()-1;
+					temperature.addPoint(i, index , sensors[i].getTemperatur().getPoints().get(index).value);
+					sensors[i].resetNewData();
+				}
+			}
+		}
+
+		temperature.update();
+		voltage.update();
 	}
-	
+
 	public void setData(Controller controller){
 		this.controller = controller;
 	}

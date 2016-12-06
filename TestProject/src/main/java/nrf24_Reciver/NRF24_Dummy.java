@@ -19,8 +19,8 @@ public class NRF24_Dummy implements NRF24_ReciverInterface{
 		SensorData data = null;
 		byte[] input = byteSendSimulation();
 		if(input != null){
-			float temp = ((float) ((60/256)-10))*((float) (input[1]*16+input[2]));
-			float volt = ((float) ((60/256)-10))*((float) (input[3]*16+input[4]));
+			float temp = (float) ((Math.random()*60)-10);
+			float volt = (float) ((Math.random()*60)-10);
 			data = new SensorData(input[0], temp, volt);
 		}
 		return data;
