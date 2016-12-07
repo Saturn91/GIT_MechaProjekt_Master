@@ -90,7 +90,7 @@ public class Log {
 			SaveToFile.saveToTextFile("LogFile.log", logFile.toString());
 		}else{
 			if(debug){
-				printErrorln("Not able to Save LogFile: writeLogFile = false");
+				printErrorln("writeLogFile = false");
 			}			
 		}
 	}
