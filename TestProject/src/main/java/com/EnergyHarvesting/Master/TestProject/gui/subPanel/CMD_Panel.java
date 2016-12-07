@@ -80,6 +80,14 @@ public class CMD_Panel extends PanelComponent{
 		newLines.add(new Line(error, Color.RED));
 	}
 	
+	public void clearFirstLine(){
+		cmd_Output.setText("");
+		lines = new ArrayList<Line>(lines.subList(1, lines.size()));
+		for(Line l: lines){
+			appendToPane(cmd_Output, l.getText(), l.getColor());
+		}
+	}
+	
 	private void appendToPane(JTextPane tp, String msg, Color c)
     {
         StyleContext sc = StyleContext.getDefaultStyleContext();

@@ -79,6 +79,7 @@ public class GraphPanel extends PanelComponent{
 					temperature.addPoint(i, time , sensors[i].getTemperatur().getPoints().get(index).value);
 					voltage.addPoint(i, time , sensors[i].getVoltage().getPoints().get(index).value);
 					temperature.addGraphName(i, sensors[i].getName());
+					voltage.addGraphName(i, sensors[i].getName());
 					sensors[i].resetNewData();
 				}
 			}

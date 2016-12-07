@@ -46,7 +46,7 @@ public class App
 {
 	//---------Config-----------
 	public static int saveTimeMIN = 5;
-	private static String fileName = "DataFile.txt";
+	private static String fileName = "DataFile.data";
 	private static boolean withGui = false;
 	//--------\Config-----------
 	
