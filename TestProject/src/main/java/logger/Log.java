@@ -2,6 +2,7 @@ package logger;
 
 import com.EnergyHarvesting.Master.TestProject.App;
 import com.EnergyHarvesting.Master.TestProject.gui.GUI;
+import com.saturn91.saveToFile.SaveToFile;
 
 public class Log {
 	public static final String logLine =  "[ LOG ]";
@@ -89,7 +90,7 @@ public class Log {
 			SaveToFile.saveToTextFile("LogFile.log", logFile.toString());
 		}else{
 			if(debug){
-				printErrorln("Not able to Save LogFile: writeLogFile = false");
+				printErrorln("writeLogFile = false");
 			}			
 		}
 	}
