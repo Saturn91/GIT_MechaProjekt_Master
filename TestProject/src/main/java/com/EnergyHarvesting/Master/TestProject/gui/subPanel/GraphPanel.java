@@ -41,7 +41,7 @@ public class GraphPanel extends PanelComponent{
 		temperature.setMaxValue(20, 50);
 		temperature.setxSeperator(10);
 		temperature.setySeperator(12);
-		temperature.setGraphNameTextSize(10);
+		temperature.setGraphNameTextSize(15);
 		temperature.setxAxisText("[h]");
 		temperature.setyAxisText("[C°]");
 		temperature.setDotSize(10);
@@ -54,7 +54,7 @@ public class GraphPanel extends PanelComponent{
 		voltage.setMaxValue(5, 10);
 		voltage.setxSeperator(10);
 		voltage.setySeperator(10);
-		voltage.setGraphNameTextSize(10);
+		voltage.setGraphNameTextSize(15);
 		voltage.setxAxisText("[h]");
 		voltage.setyAxisText("[V]");
 		voltage.setDotSize(10);
@@ -71,6 +71,7 @@ public class GraphPanel extends PanelComponent{
 				if(sensors[i].hasNewData()){
 					int index = sensors[i].getTemperatur().getPoints().size()-1;
 					temperature.addPoint(i, index , sensors[i].getTemperatur().getPoints().get(index).value);
+					temperature.addGraphName(i, sensors[i].getName());
 					sensors[i].resetNewData();
 				}
 			}
