@@ -3,6 +3,7 @@ package com.EnergyHarvesting.Master.TestProject.gui.subPanel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.JPanel;
 
@@ -38,27 +39,29 @@ public class GraphPanel extends PanelComponent{
 		temperature = new JGraph("Temperature", 10, 10, (width/2)-20, height-20);
 		temperature.setBorder(50);
 		temperature.setMinValue(0, -10);
-		temperature.setMaxValue(20, 50);
-		temperature.setxSeperator(10);
+		temperature.setMaxValue(24, 50);
+		temperature.setxSeperator(12);
 		temperature.setySeperator(12);
-		temperature.setGraphNameTextSize(15);
+		temperature.setGraphNameTextSize(12);
 		temperature.setxAxisText("[h]");
 		temperature.setyAxisText("[C°]");
 		temperature.setDotSize(10);
 		temperature.setArrowSize(5);
+				temperature.setShowDots(false);	//--> only for testing
 		add(temperature);
 
 		voltage = new JGraph("Voltage", (width/2)+5, 10, (width/2)-20, height-20);
 		voltage.setBorder(50);
 		voltage.setMinValue(0, 0);
-		voltage.setMaxValue(5, 10);
-		voltage.setxSeperator(10);
+		voltage.setMaxValue(24, 10);
+		voltage.setxSeperator(12);
 		voltage.setySeperator(10);
-		voltage.setGraphNameTextSize(15);
+		voltage.setGraphNameTextSize(12);
 		voltage.setxAxisText("[h]");
 		voltage.setyAxisText("[V]");
 		voltage.setDotSize(10);
 		voltage.setArrowSize(5);
+				voltage.setShowDots(false);		//only for testing
 		add(voltage);
 	}
 
@@ -69,8 +72,12 @@ public class GraphPanel extends PanelComponent{
 		for(int i = 0; i < sensors.length; i++){
 			if(sensors[i]!=null){
 				if(sensors[i].hasNewData()){
+					float hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+					float minutes = Calendar.getInstance().get(Calendar.MINUTE);
+					float time = hour + minutes/60;
 					int index = sensors[i].getTemperatur().getPoints().size()-1;
-					temperature.addPoint(i, index , sensors[i].getTemperatur().getPoints().get(index).value);
+					temperature.addPoint(i, time , sensors[i].getTemperatur().getPoints().get(index).value);
+					voltage.addPoint(i, time , sensors[i].getVoltage().getPoints().get(index).value);
 					temperature.addGraphName(i, sensors[i].getName());
 					sensors[i].resetNewData();
 				}

@@ -20,7 +20,7 @@ public class NRF24_Dummy implements NRF24_ReciverInterface{
 		byte[] input = byteSendSimulation();
 		if(input != null){
 			float temp = (float) ((Math.random()*60)-10);
-			float volt = (float) ((Math.random()*60)-10);
+			float volt = (float) (Math.random()*10);
 			data = new SensorData(input[0], temp, volt);
 		}
 		return data;
@@ -28,7 +28,7 @@ public class NRF24_Dummy implements NRF24_ReciverInterface{
 	
 	private long lastTime= 0;
 	private long nowTime;
-	private int maxDelta = 10000;
+	private int maxDelta = 120000;
 	private int delta = 0;
 	
 	private byte[] byteSendSimulation(){
