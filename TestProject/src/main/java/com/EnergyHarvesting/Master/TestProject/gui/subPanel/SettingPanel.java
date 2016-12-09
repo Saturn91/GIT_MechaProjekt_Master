@@ -6,25 +6,34 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.EnergyHarvesting.Master.TestProject.App;
+import com.saturn91.saveToFile.SaveToFile;
 
+import controler.Controller;
 import logger.Log;
 
 public class SettingPanel extends PanelComponent{
 	
+	private JLabel titleSettings;
 	private JCheckBox log;
 	private JLabel logLabel;
 	private JCheckBox logFile;
 	private JLabel logFileLabel;
 	private JTextField saveTime;
 	private JLabel saveTimeLabel;	
+	private JButton loadBtn;
+	private JButton clearLineInCMDBtn;
+	private JTextField loadPath;
 	
-	private int x_Devider1 = 200;
+	private int x_Devider1 = 175;
+	
+	private boolean deleteLineInCMD = false;
 
 	public SettingPanel(int x, int y, int width, int height) {
 		super(x, y, width, height);
@@ -34,14 +43,31 @@ public class SettingPanel extends PanelComponent{
 	public void init() {
 		setLayout(null);
 		setBounds();
-		initDebug(20, 20);	
-		initWriteLogFile(20, 40);
-		initSaveTime(20, 60, ""+App.saveTimeMIN);
+		titleSettings = new JLabel("Settings:");
+		add(titleSettings);
+		titleSettings.setBounds(20, 20, 150, 20);
+		initDebug(20, 45);	
+		initWriteLogFile(20, 70);
+		initSaveTime(20, 95, ""+App.saveTimeMIN);
+		initClearButton(20, 120);
+		initLoadBtn(20, 145);
+		
 	}
 
 	@Override
 	public void update() {
-				
+		if(load){
+			load = false;
+			load();
+		}
+		
+		if(saveTimeFlag){
+			updateSaveTime();
+			saveTimeFlag = false;
+		}
+		
+		Log.debug = loggerFlag;
+		Log.writeLogFile = writeLogFileFlag;
 	}
 	
 	private String lastSaveTimeString = "";
@@ -68,6 +94,7 @@ public class SettingPanel extends PanelComponent{
 		}		
 	}
 	
+	private boolean loggerFlag = false;
 	private void initDebug(int x, int y){
 		log = new JCheckBox();
 		logLabel = new JLabel("debug: ");
@@ -80,14 +107,15 @@ public class SettingPanel extends PanelComponent{
 			
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {//checkbox has been selected
-		            Log.debug = true;
+					loggerFlag = true;
 		        } else {//checkbox has been deselected
-		        	Log.debug = false;
+		        	loggerFlag = false;
 		        };				
 			}
 		});
 	}
 	
+	private boolean writeLogFileFlag = false;
 	private void initWriteLogFile(int x, int y){
 		logFile = new JCheckBox();
 		logFileLabel = new JLabel("write Logfile: ");
@@ -100,21 +128,22 @@ public class SettingPanel extends PanelComponent{
 			
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {	//checkbox has been selected
-		            Log.writeLogFile = true;
+					writeLogFileFlag = true;
 		        } else {										//checkbox has been deselected
-		        	Log.writeLogFile = false;
+		        	writeLogFileFlag = false;
 		        };				
 			}
 		});
 	}
 	
+	private boolean saveTimeFlag = false;
 	private void initSaveTime(int x, int y, String text){
 		saveTime = new JTextField(text);
 		
 		saveTimeLabel = new JLabel("time between saves [min]:");
 		saveTime.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				updateSaveTime();
+				saveTimeFlag = true;
 			}
 		});
 		
@@ -123,5 +152,63 @@ public class SettingPanel extends PanelComponent{
 		
 		saveTime.setBounds(x+x_Devider1+15, y, 40, 20);
 		saveTimeLabel.setBounds(x, y, x_Devider1, 20);		
+	}
+	
+	private boolean load = false;
+	private void initLoadBtn(int x, int y){
+		loadBtn = new JButton("Load Data");
+		loadBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				load = true;
+			}
+		});
+		
+		loadPath = new JTextField("Filepath.data");
+		add(loadBtn);
+		add(loadPath);
+		loadBtn.setBounds(x, y, 110, 20);
+		loadPath.setBounds(x, y+25, 250, 20);
+		
+	}
+	
+	private void initClearButton(int x, int y){
+		clearLineInCMDBtn = new JButton("Clear CMD");
+		clearLineInCMDBtn.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				deleteLineInCMD = true;			
+			}
+		});
+		add(clearLineInCMDBtn);
+		clearLineInCMDBtn.setBounds(x, y, 110, 20);
+	}
+	
+	public boolean deleteCMDLine(){
+		return deleteLineInCMD;
+	}
+	
+	public void resetDelCMDLine(){
+		deleteLineInCMD = false;
+	}
+	
+	public void load(){
+		Log.printInfoln("load Data from: " + loadPath.getText(), true);
+		Controller loadController = null;
+		boolean loadError = false;
+		try {
+			loadController = (Controller) SaveToFile.getDataFromBinaryFile(loadPath.getText());
+		} catch (Exception e2) {
+			loadError = true;
+		}
+		
+		if(loadController != null){
+			App.setController(loadController);
+		}else{
+			loadError = true;
+		}			
+		
+		if(loadError){
+			Log.printErrorln("not able to load: " + loadPath.getText());
+		}
 	}
 }

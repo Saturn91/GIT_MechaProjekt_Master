@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 
 import javax.swing.*;
 
+import com.EnergyHarvesting.Master.TestProject.gui.subPanel.GraphPanel;
+
 import controler.Controller;
 
 /**
@@ -65,6 +67,10 @@ public class GUI extends JFrame {
 	
 	public void update(){
 		panel.update();
+	}
+	
+	public void clearGraphPanel(){
+		panel.clearGraphs();
 	}
 
 
