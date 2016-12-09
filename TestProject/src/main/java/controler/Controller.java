@@ -1,9 +1,11 @@
 package controler;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import nrf24_Reciver.SensorData;
 import logger.Log;
+
 import com.saturn91.saveToFile.SaveToFile;
 
 /**
@@ -21,17 +23,12 @@ public class Controller implements Serializable{
 	private TemperaturSensor[] sensors;
 	private String[] sensorNames = null;
 	
-	private static long startTime = 0;
-	
 	public Controller() {
-		Log.printInfoln("Initialize Controller!");
+		Log.printInfoln("Initialize Controller", true);
 		sensors = new TemperaturSensor[16];		//not more than 16 Sensor possibly with a byte address
 	}
 	
 	public void handleData(SensorData data){
-		if(startTime == 0){
-			startTime = System.currentTimeMillis();
-		}
 		if(data != null){
 			administrateSensors(data.getId());
 			sensors[data.getId()].addData(data.getVoltage(), data.getTemperatur());
@@ -39,8 +36,11 @@ public class Controller implements Serializable{
 	}
 	
 	public void save(String fileName){
-		Log.printInfoln("saved Data to " + fileName, true); 	//print saveData
-		SaveToFile.saveToBinaryFile(fileName, this);
+		if(SaveToFile.saveToBinaryFile(fileName, this)){
+			Log.printInfoln("saved Data to " + fileName, true); 	//print saveData
+		}else{
+			Log.printErrorln("not able to load: " + fileName); 	//print saveData
+		}
 	}
 	
 	private void administrateSensors(int id){
@@ -65,9 +65,5 @@ public class Controller implements Serializable{
 	
 	public TemperaturSensor[] getSensors(){
 		return sensors;
-	}
-	
-	public static long getStartTime(){
-		return startTime;
 	}
 }

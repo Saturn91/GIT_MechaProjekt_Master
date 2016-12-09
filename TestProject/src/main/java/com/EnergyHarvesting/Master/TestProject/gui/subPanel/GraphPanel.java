@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JPanel;
 
@@ -91,5 +92,34 @@ public class GraphPanel extends PanelComponent{
 
 	public void setData(Controller controller){
 		this.controller = controller;
+	}
+	
+	/**
+	 * Repaint Graphs for new Data
+	 */
+	public void clear(){
+		temperature.clear();
+		voltage.clear();
+		
+		sensors = controller.getSensors();
+
+		for(int i = 0; i < sensors.length; i++){
+			if(sensors[i]!=null){
+				temperature.addGraphName(i, sensors[i].getName());
+				voltage.addGraphName(i, sensors[i].getName());
+				for(int j = 0; j < sensors[i].getVoltage().getPoints().size(); j++){
+					int index = j;
+					long oldTime = sensors[i].getTime(index);
+					Date date = new Date(oldTime);
+					Calendar calender = Calendar.getInstance();
+					calender.setTime(date);
+					float hour = calender.get(Calendar.HOUR_OF_DAY);
+					float minutes = calender.get(Calendar.MINUTE);
+					float time = hour + minutes/60;
+					temperature.addPoint(i, time , sensors[i].getTemperatur().getPoints().get(index).value);
+					voltage.addPoint(i, time , sensors[i].getVoltage().getPoints().get(index).value);
+				}				
+			}
+		}
 	}
 }

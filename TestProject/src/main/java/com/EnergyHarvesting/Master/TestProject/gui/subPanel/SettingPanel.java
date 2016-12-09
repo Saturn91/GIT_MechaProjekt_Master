@@ -13,7 +13,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.EnergyHarvesting.Master.TestProject.App;
+import com.saturn91.saveToFile.SaveToFile;
 
+import controler.Controller;
 import logger.Log;
 
 public class SettingPanel extends PanelComponent{
@@ -54,7 +56,18 @@ public class SettingPanel extends PanelComponent{
 
 	@Override
 	public void update() {
-				
+		if(load){
+			load = false;
+			load();
+		}
+		
+		if(saveTimeFlag){
+			updateSaveTime();
+			saveTimeFlag = false;
+		}
+		
+		Log.debug = loggerFlag;
+		Log.writeLogFile = writeLogFileFlag;
 	}
 	
 	private String lastSaveTimeString = "";
@@ -81,6 +94,7 @@ public class SettingPanel extends PanelComponent{
 		}		
 	}
 	
+	private boolean loggerFlag = false;
 	private void initDebug(int x, int y){
 		log = new JCheckBox();
 		logLabel = new JLabel("debug: ");
@@ -93,14 +107,15 @@ public class SettingPanel extends PanelComponent{
 			
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {//checkbox has been selected
-		            Log.debug = true;
+					loggerFlag = true;
 		        } else {//checkbox has been deselected
-		        	Log.debug = false;
+		        	loggerFlag = false;
 		        };				
 			}
 		});
 	}
 	
+	private boolean writeLogFileFlag = false;
 	private void initWriteLogFile(int x, int y){
 		logFile = new JCheckBox();
 		logFileLabel = new JLabel("write Logfile: ");
@@ -113,21 +128,22 @@ public class SettingPanel extends PanelComponent{
 			
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {	//checkbox has been selected
-		            Log.writeLogFile = true;
+					writeLogFileFlag = true;
 		        } else {										//checkbox has been deselected
-		        	Log.writeLogFile = false;
+		        	writeLogFileFlag = false;
 		        };				
 			}
 		});
 	}
 	
+	private boolean saveTimeFlag = false;
 	private void initSaveTime(int x, int y, String text){
 		saveTime = new JTextField(text);
 		
 		saveTimeLabel = new JLabel("time between saves [min]:");
 		saveTime.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				updateSaveTime();
+				saveTimeFlag = true;
 			}
 		});
 		
@@ -138,11 +154,12 @@ public class SettingPanel extends PanelComponent{
 		saveTimeLabel.setBounds(x, y, x_Devider1, 20);		
 	}
 	
+	private boolean load = false;
 	private void initLoadBtn(int x, int y){
 		loadBtn = new JButton("Load Data");
 		loadBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Log.printInfoln("load Data from: " + loadPath.getText(), true);
+				load = true;
 			}
 		});
 		
@@ -172,5 +189,26 @@ public class SettingPanel extends PanelComponent{
 	
 	public void resetDelCMDLine(){
 		deleteLineInCMD = false;
+	}
+	
+	public void load(){
+		Log.printInfoln("load Data from: " + loadPath.getText(), true);
+		Controller loadController = null;
+		boolean loadError = false;
+		try {
+			loadController = (Controller) SaveToFile.getDataFromBinaryFile(loadPath.getText());
+		} catch (Exception e2) {
+			loadError = true;
+		}
+		
+		if(loadController != null){
+			App.setController(loadController);
+		}else{
+			loadError = true;
+		}			
+		
+		if(loadError){
+			Log.printErrorln("not able to load: " + loadPath.getText());
+		}
 	}
 }

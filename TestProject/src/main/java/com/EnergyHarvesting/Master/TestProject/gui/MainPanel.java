@@ -74,4 +74,8 @@ public class MainPanel extends PanelComponent{
 	public void addCMD_Info_Line(String info){
 		cmd_Panel.addInfoLine(info);
 	}
+
+	public void clearGraphs() {
+		graphPanel.clear();		
+	}
 }

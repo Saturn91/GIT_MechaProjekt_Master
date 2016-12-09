@@ -55,6 +55,11 @@ public class App
 	private static final int calculateMStoMin = 60000;
 	//--------\TimeDate--------
 	
+	//---------Controller------
+	private static Controller _controller;
+	private static GUI gui;
+	//--------\Controller------
+	
     public static void main( String[] args )
     {    	
     	//-------Setup Gui-------
@@ -84,7 +89,7 @@ public class App
 			}
     	}
     	
-    	GUI gui = null;    	
+    	gui = null;    	
     	if(withGui){
     		try {
     			gui = new GUI();
@@ -103,23 +108,23 @@ public class App
     	nrf24Dummy.init();
         
         //Setup Controller
-        Controller controller = new Controller();
+        _controller = new Controller();
         
-        Log.printInfoln("started Masterprogram!", true);
+        Log.printInfoln("started Masterprogram", true);
         
         //Main loop of application (exits if program or window gets closed)
         while(true){
         	//---------read SPI-Data-----------
-        	controller.handleData(nrf24Dummy.getData());
+        	_controller.handleData(nrf24Dummy.getData());
         	
         	//------Display Changes in Gui------
         	if(withGui){
-        		gui.setData(controller);
+        		gui.setData(_controller);
         		gui.update();
         	}        	
         	
         	//---save Data after n-minutes------
-        	save(saveTimeMIN, controller);
+        	save(saveTimeMIN, _controller);
         }
     }
     
@@ -150,5 +155,12 @@ public class App
     
     public static boolean isWithGui(){
     	return withGui;
+    }
+    
+    public static void setController(Controller controller){
+    	_controller = controller;
+    	if(withGui){
+    		gui.clearGraphPanel();
+    	}  
     }
 }
