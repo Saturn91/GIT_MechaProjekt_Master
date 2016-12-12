@@ -100,7 +100,6 @@ public class GraphPanel extends PanelComponent{
 	public void clear(){
 		temperature.clear();
 		voltage.clear();
-		
 		sensors = controller.getSensors();
 
 		for(int i = 0; i < sensors.length; i++){
