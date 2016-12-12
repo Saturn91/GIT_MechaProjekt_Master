@@ -160,6 +160,7 @@ public class App
     public static void setController(Controller controller){
     	_controller = controller;
     	if(withGui){
+    		gui.setData(_controller);
     		gui.clearGraphPanel();
     	}  
     }
