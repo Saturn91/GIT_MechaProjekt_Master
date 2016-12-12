@@ -57,8 +57,8 @@ public class SettingPanel extends PanelComponent{
 	@Override
 	public void update() {
 		if(load){
-			load = false;
 			load();
+			load = false;
 		}
 		
 		if(saveTimeFlag){
@@ -192,11 +192,14 @@ public class SettingPanel extends PanelComponent{
 	}
 	
 	public void load(){
-		Log.printInfoln("load Data from: " + loadPath.getText(), true);
+		Log.printInfoln("Start load Data from: " + loadPath.getText(), true);
 		Controller loadController = null;
 		boolean loadError = false;
 		try {
-			loadController = (Controller) SaveToFile.getDataFromBinaryFile(loadPath.getText());
+			while(loadController == null){
+				loadController = (Controller) SaveToFile.getDataFromBinaryFile(loadPath.getText());
+			}
+			Log.printInfoln("successfully loaded Data from: " + loadPath.getText(), true);
 		} catch (Exception e2) {
 			loadError = true;
 		}
