@@ -228,23 +228,126 @@ public class GraphPanel extends PanelComponent{
 			}
 		}
 
-		//check flags of min and max values axis
-		if(setTemperatureFlag){
-			int minValueX;
-			int maxValueX;
-			int minValueY;
-			int maxValueY;	
-		}
-
-		if(setVoltageFlag){
-			int minValueX;
-			int maxValueX;
-			int minValueY;
-			int maxValueY;
-		}
+		updateMinMaxFlags();
 
 		temperature.update();
 		voltage.update();
+	}
+
+	private void updateMinMaxFlags() {
+		//check flags of min and max values axis
+		if(setTemperatureFlag){
+			boolean notAnumber = false;
+			boolean checkInput = false;
+			float num = 0;
+			try {
+				num = Float.parseFloat(temperatureXmin.getText());
+				notAnumber = false;
+				checkInput = true;
+			} catch (Exception e) {
+				notAnumber=true;
+			}
+
+			if(!notAnumber){
+				temperature.setMinValueX(num);
+			}
+
+			try {
+				num = Float.parseFloat(temperatureXmax.getText());
+				notAnumber = false;
+			} catch (Exception e) {
+				notAnumber=true;
+			}
+
+			if(!notAnumber){
+				temperature.setMaxValueX(num);
+			}
+
+			try {
+				num = Float.parseFloat(temperatureYmin.getText());
+				notAnumber = false;
+				checkInput = true;
+			} catch (Exception e) {
+				notAnumber=true;
+			}
+
+			if(!notAnumber){
+				temperature.setMinValueY(num);
+			}
+
+			try {
+				num = Float.parseFloat(temperatureYmax.getText());
+				notAnumber = false;
+			} catch (Exception e) {
+				notAnumber=true;
+			}
+
+			if(!notAnumber){
+				temperature.setMaxValueY(num);
+			}
+
+			if(!checkInput){
+				Log.printErrorln("Wrong Input must be a Float!");
+			}
+			setTemperatureFlag = false;
+		}
+
+		if(setVoltageFlag){
+			boolean notAnumber = false;
+			boolean checkInput = false;
+			float num = 0;
+			try {
+				num = Float.parseFloat(voltageXmin.getText());
+				notAnumber = false;
+				checkInput = true;
+			} catch (Exception e) {
+				notAnumber=true;
+			}
+
+			if(!notAnumber){
+				voltage.setMinValueX(num);
+			}
+
+			try {
+				num = Float.parseFloat(voltageXmax.getText());
+				notAnumber = false;
+			} catch (Exception e) {
+				notAnumber=true;
+			}
+
+			if(!notAnumber){
+				voltage.setMaxValueX(num);
+			}
+
+			try {
+				num = Float.parseFloat(voltageYmin.getText());
+				notAnumber = false;
+				checkInput = true;
+			} catch (Exception e) {
+				notAnumber=true;
+			}
+
+			if(!notAnumber){
+				voltage.setMinValueY(num);
+			}
+
+			try {
+				num = Float.parseFloat(voltageYmax.getText());
+				notAnumber = false;
+			} catch (Exception e) {
+				notAnumber=true;
+			}
+
+			if(!notAnumber){
+				voltage.setMaxValueY(num);
+			}
+
+			if(!checkInput){
+				Log.printErrorln("Wrong Input must be a Float!");
+			}
+			setVoltageFlag = false;
+		}
+
 	}
 
 	public void setData(Controller controller){
