@@ -28,7 +28,8 @@ public class NRF24_Dummy implements NRF24_ReciverInterface{
 	
 	private long lastTime= 0;
 	private long nowTime;
-	private int maxDelta = 15000;
+	private int maxDelta = 40000;
+	private int minDelta = 30000;
 	private int delta = 0;
 	
 	private byte[] byteSendSimulation(){
@@ -38,7 +39,7 @@ public class NRF24_Dummy implements NRF24_ReciverInterface{
 			data = new byte[bytes];
 			Log.println("recived Data!");
 			lastTime = nowTime;
-			delta = (int) (Math.random()*maxDelta);
+			delta = (int) (Math.random()*(maxDelta-minDelta))+minDelta;
 			
 			data[0] = 1;	//Sensor Address
 			

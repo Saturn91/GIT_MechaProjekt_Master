@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 public class TemperaturSensor implements Serializable{
 	private String name;
-	private Graph temperatur;
-	private Graph voltage;
+	private ArrayList<Float> temperature;
+	private ArrayList<Float> voltage;
 	private int address;
 	private boolean newData = false;
 	
@@ -14,24 +14,24 @@ public class TemperaturSensor implements Serializable{
 	
 	public TemperaturSensor(int address, String name) {
 		this.name = name;
-		this.temperatur  = new Graph(name + ": Voltage");
-		this.voltage = new Graph(name + ": Temperatur");
+		this.temperature  = new ArrayList<Float>();
+		this.voltage = new ArrayList<Float>();
 		this.address = address;
 	}
 	
 	public void addData(float voltage, float temperatur){
-		this.temperatur.addPoint(new Point(temperatur, System.currentTimeMillis()));
-		this.voltage.addPoint(new Point(voltage, System.currentTimeMillis()));
+		this.temperature.add(temperatur);
+		this.voltage.add(voltage);
 		this.times.add(System.currentTimeMillis());
 		this.newData = true;
 	}
 	
 	
-	public Graph getTemperatur(){
-		return temperatur;
+	public ArrayList<Float> getTemperatur(){
+		return temperature;
 	}
 	
-	public Graph getVoltage(){
+	public ArrayList<Float> getVoltage(){
 		return voltage;
 	}
 	

@@ -218,9 +218,9 @@ public class GraphPanel extends PanelComponent{
 					float hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 					float minutes = Calendar.getInstance().get(Calendar.MINUTE);
 					float time = hour + minutes/60;
-					int index = sensors[i].getTemperatur().getPoints().size()-1;
-					temperature.addPoint(i, time , sensors[i].getTemperatur().getPoints().get(index).value);
-					voltage.addPoint(i, time , sensors[i].getVoltage().getPoints().get(index).value);
+					int index = sensors[i].getTemperatur().size()-1;
+					temperature.addPoint(i, time , sensors[i].getTemperatur().get(index));
+					voltage.addPoint(i, time , sensors[i].getVoltage().get(index));
 					temperature.addGraphName(i, sensors[i].getName());
 					voltage.addGraphName(i, sensors[i].getName());
 					sensors[i].resetNewData();
@@ -366,7 +366,7 @@ public class GraphPanel extends PanelComponent{
 			if(sensors[i]!=null){
 				temperature.addGraphName(i, sensors[i].getName());
 				voltage.addGraphName(i, sensors[i].getName());
-				for(int j = 0; j < sensors[i].getVoltage().getPoints().size(); j++){
+				for(int j = 0; j < sensors[i].getVoltage().size(); j++){
 					int index = j;
 					long oldTime = sensors[i].getTime(index);
 					Date date = new Date(oldTime);
@@ -375,8 +375,8 @@ public class GraphPanel extends PanelComponent{
 					float hour = calender.get(Calendar.HOUR_OF_DAY);
 					float minutes = calender.get(Calendar.MINUTE);
 					float time = hour + minutes/60;
-					temperature.addPoint(i, time , sensors[i].getTemperatur().getPoints().get(index).value);
-					voltage.addPoint(i, time , sensors[i].getVoltage().getPoints().get(index).value);
+					temperature.addPoint(i, time , sensors[i].getTemperatur().get(index));
+					voltage.addPoint(i, time , sensors[i].getVoltage().get(index));
 				}				
 			}
 		}
