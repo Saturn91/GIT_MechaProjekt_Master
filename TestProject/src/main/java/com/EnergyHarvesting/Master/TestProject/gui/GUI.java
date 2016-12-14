@@ -23,12 +23,12 @@ public class GUI extends JFrame {
 	private static final String title = "Energie Harvesting Project - Master";
 	
 	private static final int width = 1350;
-	private static final int height = 900;
+	private static final int height = 950;
 	private static final int xPos = 50;
 	private static final int yPos = 50;
 	//-----------\Window Config-------------
 	
-	private static MainPanel panel = new MainPanel(0, 0, 1350, 900);
+	private static MainPanel panel = new MainPanel(0, 0, width, height);
 
 	public GUI() {
 		

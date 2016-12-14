@@ -36,9 +36,9 @@ public class MainPanel extends PanelComponent{
 	
 	public void init(){
 		setLayout(null);
-		graphPanel = new GraphPanel(0, 0, 1350, 540);
-		settingPanel = new SettingPanel(0, 540, 675, 360);
-		cmd_Panel = new CMD_Panel(675, 540, 675, 360, 22);	//should be: 900, 540, 450, 360, (22 = maxLines)
+		graphPanel = new GraphPanel(0, 0, 1350, 590);
+		settingPanel = new SettingPanel(0, 590, 675, 360);
+		cmd_Panel = new CMD_Panel(675, 590, 675, 360, 22);	//should be: 900, 540, 450, 360, (22 = maxLines)
 		
 		add(graphPanel);
 		graphPanel.init();
