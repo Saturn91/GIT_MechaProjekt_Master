@@ -2,11 +2,17 @@ package com.EnergyHarvesting.Master.TestProject.gui.subPanel;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import com.saturn91.JGraph;
 
@@ -21,23 +27,159 @@ public class GraphPanel extends PanelComponent{
 	private JGraph temperature;
 	private JGraph voltage;
 
+	private JTextField temperatureXmin, temperatureXmax, temperatureYmin, temperatureYmax;
+	private JTextField voltageXmin, voltageXmax, voltageYmin, voltageYmax;
+	private JLabel textTemperatureXmin, textTemperatureXmax, textTemperatureYmin, textTemperatureYmax;
+	private JLabel textVoltageXmin, textVoltageXmax, textVoltageYmin, textVoltageYmax;
+
 	private int width;
 	private int height;
+
+	private int positionMinMaxBox_X = 10;
+	private int positionMinMaxBox_Y;
 
 	private TemperaturSensor[] sensors;
 
 	public GraphPanel(int x, int y, int width, int height) {
 		super(x, y, width, height);
 		this.width = width;
-		this.height = height;		
+		this.height = height;	
+		positionMinMaxBox_Y = height-50;
 	}
 
 	@Override
 	public void init() {
-		setBounds();
-		setBackground(Color.GRAY);
 		setLayout(null);
-		temperature = new JGraph("Temperature", 10, 10, (width/2)-20, height-20);
+		setBounds();
+		initGraphs();	
+		initMaxMinLine();
+		initBackgrounds();
+	}
+
+	private boolean setVoltageFlag = false;
+	private boolean setTemperatureFlag = false;
+	private void initMaxMinLine() {
+		int cursorX = positionMinMaxBox_X+10;
+		int cursorY = positionMinMaxBox_Y;
+		//----------Temperature----------------------------------:
+		textTemperatureXmin = new JLabel("minX:");
+		textTemperatureXmin.setBounds(cursorX, cursorY, 100, 18);	
+		temperatureXmin = new JTextField("-");
+		temperatureXmin.setBounds(cursorX+40, cursorY, 35, 18);
+		temperatureXmin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setTemperatureFlag = true;				
+			}
+		});
+		cursorY +=20;
+		textTemperatureXmax = new JLabel("maxX:");
+		textTemperatureXmax.setBounds(cursorX, cursorY, 100, 18);	
+		temperatureXmax = new JTextField("-");
+		temperatureXmax.setBounds(cursorX+40, cursorY, 35, 18);
+		temperatureXmax.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setTemperatureFlag = true;				
+			}
+		});
+
+		cursorX += 500;
+		cursorY -= 20;
+		textTemperatureYmin = new JLabel("minY:");
+		textTemperatureYmin.setBounds(cursorX, cursorY, 100, 18);	
+		temperatureYmin = new JTextField("-");
+		temperatureYmin.setBounds(cursorX+40, cursorY, 35, 18);
+		temperatureYmin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setTemperatureFlag = true;				
+			}
+		});
+		cursorY +=20;
+		textTemperatureYmax = new JLabel("maxY:");
+		textTemperatureYmax.setBounds(cursorX, cursorY, 100, 18);	
+		temperatureYmax = new JTextField("-");
+		temperatureYmax.setBounds(cursorX+40, cursorY, 35, 18);
+		temperatureYmax.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setTemperatureFlag = true;				
+			}
+		});
+		add(textTemperatureXmax);
+		add(temperatureXmax);
+		add(textTemperatureXmin);
+		add(temperatureXmin);
+		add(textTemperatureYmax);
+		add(temperatureYmax);
+		add(textTemperatureYmin);
+		add(temperatureYmin);
+
+		//----------Voltage----------------------------------:
+		cursorX = (width/2)+5+10;
+		cursorY = positionMinMaxBox_Y;
+		textVoltageXmin = new JLabel("minX:");
+		textVoltageXmin.setBounds(cursorX, cursorY, 100, 18);	
+		voltageXmin = new JTextField("-");
+		voltageXmin.setBounds(cursorX+40, cursorY, 35, 18);
+		voltageXmin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVoltageFlag = true;				
+			}
+		});
+		cursorY +=20;
+		textVoltageXmax = new JLabel("maxX:");
+		textVoltageXmax.setBounds(cursorX, cursorY, 100, 18);	
+		voltageXmax = new JTextField("-");
+		voltageXmax.setBounds(cursorX+40, cursorY, 35, 18);
+		voltageXmax.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVoltageFlag = true;				
+			}
+		});
+
+		cursorX += 500;
+		cursorY -= 20;
+		textVoltageYmin = new JLabel("minY:");
+		textVoltageYmin.setBounds(cursorX, cursorY, 100, 18);	
+		voltageYmin = new JTextField("-");
+		voltageYmin.setBounds(cursorX+40, cursorY, 35, 18);
+		voltageYmin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVoltageFlag = true;				
+			}
+		});
+		cursorY +=20;
+		textVoltageYmax = new JLabel("maxY:");
+		textVoltageYmax.setBounds(cursorX, cursorY, 100, 18);	
+		voltageYmax = new JTextField("-");
+		voltageYmax.setBounds(cursorX+40, cursorY, 35, 18);
+		voltageYmax.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVoltageFlag = true;				
+			}
+		});
+		add(textVoltageXmax);
+		add(voltageXmax);
+		add(textVoltageXmin);
+		add(voltageXmin);
+		add(textVoltageYmax);
+		add(voltageYmax);
+		add(textVoltageYmin);
+		add(voltageYmin);
+	}
+
+	private void initBackgrounds(){
+		setBackground(Color.GRAY);
+		JPanel background = new JPanel();
+		background.setBounds(positionMinMaxBox_X, positionMinMaxBox_Y, width-25, 40);
+		background.setBackground(Color.WHITE);
+		add(background);
+		JPanel seperator = new JPanel();
+		seperator.setBackground(Color.GRAY);
+		seperator.setBounds(0, height-4, width, 4);
+		add(seperator);
+	}
+
+	private void initGraphs(){
+		temperature = new JGraph("Temperature", 10, 10, (width/2)-20, height-70);
 		temperature.setBorder(50);
 		temperature.setMinValue(0, -10);
 		temperature.setMaxValue(24, 50);
@@ -48,10 +190,10 @@ public class GraphPanel extends PanelComponent{
 		temperature.setyAxisText("[C°]");
 		temperature.setDotSize(10);
 		temperature.setArrowSize(5);
-				temperature.setShowDots(false);	//--> only for testing
+		temperature.setShowDots(false);	//--> only for testing
 		add(temperature);
 
-		voltage = new JGraph("Voltage", (width/2)+5, 10, (width/2)-20, height-20);
+		voltage = new JGraph("Voltage", (width/2)+5, 10, (width/2)-20, height-70);
 		voltage.setBorder(50);
 		voltage.setMinValue(0, 0);
 		voltage.setMaxValue(24, 10);
@@ -62,7 +204,7 @@ public class GraphPanel extends PanelComponent{
 		voltage.setyAxisText("[V]");
 		voltage.setDotSize(10);
 		voltage.setArrowSize(5);
-				voltage.setShowDots(false);		//only for testing
+		voltage.setShowDots(false);		//only for testing
 		add(voltage);
 	}
 
@@ -86,6 +228,21 @@ public class GraphPanel extends PanelComponent{
 			}
 		}
 
+		//check flags of min and max values axis
+		if(setTemperatureFlag){
+			int minValueX;
+			int maxValueX;
+			int minValueY;
+			int maxValueY;	
+		}
+
+		if(setVoltageFlag){
+			int minValueX;
+			int maxValueX;
+			int minValueY;
+			int maxValueY;
+		}
+
 		temperature.update();
 		voltage.update();
 	}
@@ -93,7 +250,7 @@ public class GraphPanel extends PanelComponent{
 	public void setData(Controller controller){
 		this.controller = controller;
 	}
-	
+
 	/**
 	 * Repaint Graphs for new Data
 	 */
