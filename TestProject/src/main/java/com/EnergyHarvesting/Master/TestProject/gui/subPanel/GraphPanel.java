@@ -191,6 +191,7 @@ public class GraphPanel extends PanelComponent{
 		temperature.setDotSize(10);
 		temperature.setArrowSize(5);
 		temperature.setShowDots(false);	//--> only for testing
+		temperature.setRound(2);
 		add(temperature);
 
 		voltage = new JGraph("Voltage", (width/2)+5, 10, (width/2)-20, height-70);
@@ -205,6 +206,7 @@ public class GraphPanel extends PanelComponent{
 		voltage.setDotSize(10);
 		voltage.setArrowSize(5);
 		voltage.setShowDots(false);		//only for testing
+		voltage.setRound(2);
 		add(voltage);
 	}
 
@@ -217,8 +219,10 @@ public class GraphPanel extends PanelComponent{
 				if(sensors[i].hasNewData()){
 					float hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 					float minutes = Calendar.getInstance().get(Calendar.MINUTE);
-					float time = hour + minutes/60;
+					float seconds = Calendar.getInstance().get(Calendar.SECOND);
+					float time = hour + minutes/60 + seconds/3600;
 					int index = sensors[i].getTemperatur().size()-1;
+					Log.println("DataPoint: " + index + "=" + (index+1) + ". point at time:" + time);
 					temperature.addPoint(i, time , sensors[i].getTemperatur().get(index));
 					voltage.addPoint(i, time , sensors[i].getVoltage().get(index));
 					temperature.addGraphName(i, sensors[i].getName());
@@ -374,7 +378,8 @@ public class GraphPanel extends PanelComponent{
 					calender.setTime(date);
 					float hour = calender.get(Calendar.HOUR_OF_DAY);
 					float minutes = calender.get(Calendar.MINUTE);
-					float time = hour + minutes/60;
+					float seconds = Calendar.getInstance().get(Calendar.SECOND);
+					float time = hour + minutes/60 + seconds/3600;
 					temperature.addPoint(i, time , sensors[i].getTemperatur().get(index));
 					voltage.addPoint(i, time , sensors[i].getVoltage().get(index));
 				}				
