@@ -222,7 +222,6 @@ public class GraphPanel extends PanelComponent{
 					float seconds = Calendar.getInstance().get(Calendar.SECOND);
 					float time = hour + minutes/60 + seconds/3600;
 					int index = sensors[i].getTemperatur().size()-1;
-					Log.println("DataPoint: " + index + "=" + (index+1) + ". point at time:" + time);
 					temperature.addPoint(i, time , sensors[i].getTemperatur().get(index));
 					voltage.addPoint(i, time , sensors[i].getVoltage().get(index));
 					temperature.addGraphName(i, sensors[i].getName());
