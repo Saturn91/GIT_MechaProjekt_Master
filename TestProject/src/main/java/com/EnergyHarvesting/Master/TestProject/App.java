@@ -115,6 +115,7 @@ public class App
         //Main loop of application (exits if program or window gets closed)
         while(true){
         	//---------read SPI-Data-----------
+        	_controller.update();
         	_controller.handleData(nrf24.getData());
         	
         	//------Display Changes in Gui------

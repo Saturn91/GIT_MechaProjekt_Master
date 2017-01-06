@@ -31,12 +31,18 @@ public class SettingPanel extends PanelComponent{
 	private JButton loadBtn;
 	private JButton clearLineInCMDBtn;
 	private JTextField loadPath;
+	private static JTextField[] sensorNamesFields = new JTextField[16];
+	private JLabel[] sensorNamesLabels = new JLabel[16];
 	
-	private int textSize = 8;
+	private int textSize = 10;
+	private Font font = new Font("SansSerif", Font.BOLD, textSize);
 	
 	private int x_Devider1 = 175;
 	
 	private boolean deleteLineInCMD = false;
+	
+	private static String[] sensorNames = new String[16];
+	private static boolean updateSensorNames = false;
 
 	public SettingPanel(int x, int y, int width, int height) {
 		super(x, y, width, height);
@@ -54,7 +60,7 @@ public class SettingPanel extends PanelComponent{
 		initSaveTime(20, 95, ""+App.saveTimeMIN);
 		initClearButton(20, 120);
 		initLoadBtn(20, 145);
-		
+		initSensorNames(280, 20);		
 	}
 
 	@Override
@@ -100,7 +106,9 @@ public class SettingPanel extends PanelComponent{
 	private boolean loggerFlag = false;
 	private void initDebug(int x, int y){
 		log = new JCheckBox();
+		log.setFont(font);
 		logLabel = new JLabel("debug: ");
+		logLabel.setFont(font);
 		add(log);
 		add(logLabel);
 		log.setBounds(x+x_Devider1+10, y, 20, 20);
@@ -121,7 +129,9 @@ public class SettingPanel extends PanelComponent{
 	private boolean writeLogFileFlag = false;
 	private void initWriteLogFile(int x, int y){
 		logFile = new JCheckBox();
+		logFile.setFont(font);
 		logFileLabel = new JLabel("write Logfile: ");
+		logFileLabel.setFont(font);
 		add(logFile);
 		add(logFileLabel);
 		logFile.setBounds(x+x_Devider1+10, y, 20, 20);
@@ -142,8 +152,9 @@ public class SettingPanel extends PanelComponent{
 	private boolean saveTimeFlag = false;
 	private void initSaveTime(int x, int y, String text){
 		saveTime = new JTextField(text);
-		
+		saveTime.setFont(font);
 		saveTimeLabel = new JLabel("time between saves [min]:");
+		saveTimeLabel.setFont(font);
 		saveTime.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveTimeFlag = true;
@@ -160,6 +171,7 @@ public class SettingPanel extends PanelComponent{
 	private boolean load = false;
 	private void initLoadBtn(int x, int y){
 		loadBtn = new JButton("Load Data");
+		loadBtn.setFont(font);
 		loadBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				load = true;
@@ -167,6 +179,7 @@ public class SettingPanel extends PanelComponent{
 		});
 		
 		loadPath = new JTextField("Filepath.data");
+		loadPath.setFont(font);
 		add(loadBtn);
 		add(loadPath);
 		loadBtn.setBounds(x, y, 110, 20);
@@ -176,6 +189,7 @@ public class SettingPanel extends PanelComponent{
 	
 	private void initClearButton(int x, int y){
 		clearLineInCMDBtn = new JButton("Clear CMD");
+		clearLineInCMDBtn.setFont(font);
 		clearLineInCMDBtn.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
@@ -215,6 +229,51 @@ public class SettingPanel extends PanelComponent{
 		
 		if(loadError){
 			Log.printErrorln("not able to load: " + loadPath.getText());
+		}
+	}
+	
+	public static String[] getSensorNames(){
+		//update SensorNames
+		return sensorNames;
+	}
+	
+	public static boolean updateSensorNames(){
+		for(int i = 0; i < 16; i++){
+			if(!sensorNamesFields[i].getText().isEmpty() |! sensorNamesFields[i].getText().equals("")){
+				sensorNames[i] = sensorNamesFields[i].getText();
+			}else{
+				sensorNames[i] = null;
+			}
+		}
+		return updateSensorNames;
+	}
+	
+	public static void resetUpdateSensorNames(){
+		updateSensorNames = false;
+	}
+	
+	public void initSensorNames(int x, int y){
+		for(int i = 0; i < 16; i++){
+			sensorNamesFields[i] = new JTextField();
+			sensorNamesFields[i].setFont(font);
+			sensorNamesLabels[i] = new JLabel("Sensor " + i + ":");
+			sensorNamesLabels[i].setFont(font);
+			sensorNamesFields[i].addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					updateSensorNames = true;
+				}
+			});
+			
+			add(sensorNamesFields[i]);
+			add(sensorNamesLabels[i]);
+			if(i < 8){
+				sensorNamesFields[i].setBounds(x+65, y+i*30, 100, 20);
+				sensorNamesLabels[i].setBounds(x, y+i*30, 65, 20);	
+			}else{
+				sensorNamesFields[i].setBounds(x+65+180, y+(i-8)*30, 100, 20);
+				sensorNamesLabels[i].setBounds(x+180, y+(i-8)*30, 65, 20);	
+			}
+				
 		}
 	}
 }
