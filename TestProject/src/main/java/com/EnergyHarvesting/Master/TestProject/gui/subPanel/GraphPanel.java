@@ -181,31 +181,29 @@ public class GraphPanel extends PanelComponent{
 	private void initGraphs(){
 		temperature = new JGraph("Temperature", 10, 10, (width/2)-20, height-70);
 		temperature.setBorder(50);
-		temperature.setMinValue(0, -10);
-		temperature.setMaxValue(24, 50);
+		temperature.setMinValue(0, 20);
+		temperature.setMaxValue(24, 30);
 		temperature.setxSeperator(12);
 		temperature.setySeperator(12);
 		temperature.setGraphNameTextSize(12);
 		temperature.setxAxisText("[h]");
 		temperature.setyAxisText("[C°]");
-		temperature.setDotSize(10);
 		temperature.setArrowSize(5);
-		temperature.setShowDots(false);	//--> only for testing
+		temperature.setShowDots(false);	
 		temperature.setRound(2);
 		add(temperature);
 
 		voltage = new JGraph("Voltage", (width/2)+5, 10, (width/2)-20, height-70);
 		voltage.setBorder(50);
 		voltage.setMinValue(0, 0);
-		voltage.setMaxValue(24, 10);
+		voltage.setMaxValue(24, 3);
 		voltage.setxSeperator(12);
 		voltage.setySeperator(10);
 		voltage.setGraphNameTextSize(12);
 		voltage.setxAxisText("[h]");
 		voltage.setyAxisText("[V]");
-		voltage.setDotSize(10);
 		voltage.setArrowSize(5);
-		voltage.setShowDots(false);		//only for testing
+		voltage.setShowDots(false);
 		voltage.setRound(2);
 		add(voltage);
 	}
@@ -222,6 +220,13 @@ public class GraphPanel extends PanelComponent{
 					float seconds = Calendar.getInstance().get(Calendar.SECOND);
 					float time = hour + minutes/60 + seconds/3600;
 					int index = sensors[i].getTemperatur().size()-1;
+					//for first point adjust time
+					if(index == 1){
+						temperature.setMinValueX(time-0.01f);
+						temperature.setMaxValueX(time+0.25f);
+						voltage.setMinValueX(time-0.01f);
+						voltage.setMaxValueX(time+0.25f);
+					}
 					temperature.addPoint(i, time , sensors[i].getTemperatur().get(index));
 					voltage.addPoint(i, time , sensors[i].getVoltage().get(index));
 					temperature.addGraphName(i, sensors[i].getName());
@@ -379,6 +384,17 @@ public class GraphPanel extends PanelComponent{
 					float minutes = calender.get(Calendar.MINUTE);
 					float seconds = Calendar.getInstance().get(Calendar.SECOND);
 					float time = hour + minutes/60 + seconds/3600;
+					//for first point adjust time
+					if(index == 1){
+						temperature.setMinValueX(time-0.01f);
+						voltage.setMinValueX(time-0.01f);
+						
+					}					
+					//for last adjust maxTime
+					if(index == sensors[i].getVoltage().size()-1){
+						temperature.setMaxValueX(time+0.01f);
+						voltage.setMaxValueX(time+0.01f);
+					}
 					temperature.addPoint(i, time , sensors[i].getTemperatur().get(index));
 					voltage.addPoint(i, time , sensors[i].getVoltage().get(index));
 				}				
