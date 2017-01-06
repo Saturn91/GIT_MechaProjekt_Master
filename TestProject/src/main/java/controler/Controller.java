@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import nrf24_Reciver.SensorData;
 import logger.Log;
 
+import com.EnergyHarvesting.Master.TestProject.gui.subPanel.SettingPanel;
 import com.saturn91.saveToFile.SaveToFile;
 
 /**
@@ -35,6 +36,25 @@ public class Controller implements Serializable{
 		}		
 	}
 	
+	public void update(){
+		if(SettingPanel.updateSensorNames()){
+			sensorNames = SettingPanel.getSensorNames();
+			if(sensorNames != null){
+				for(int i = 0; i < 16; i++){
+					if(sensors[i] != null){
+						if(sensorNames[i] != null){
+							sensors[i].setName(sensorNames[i]);
+						}else{
+							sensors[i].setName("Sensor"+i);
+						}
+					}
+				}			
+				Log.printInfoln("renamed SensorNames!", true);
+				SettingPanel.resetUpdateSensorNames();
+			}			
+		}
+	}
+	
 	public void save(String fileName){
 		if(SaveToFile.saveToBinaryFile(fileName, this)){
 			Log.printInfoln("saved Data to " + fileName, true); 	//print saveData
@@ -49,8 +69,13 @@ public class Controller implements Serializable{
 				sensors[id] = new TemperaturSensor(id, "Sensor"+id);
 				Log.printInfoln("found new Sensor Address=" + id, true);
 			}else{
-				sensors[id] = new TemperaturSensor(id, sensorNames[id]);
-				Log.printInfoln("found new Sensor " + sensorNames[id], true);
+				if(sensorNames[id] != null){
+					sensors[id] = new TemperaturSensor(id, sensorNames[id]);
+					Log.printInfoln("found new Sensor " + sensorNames[id], true);
+				}else{
+					sensors[id] = new TemperaturSensor(id, "Sensor"+id);
+					Log.printInfoln("found new Sensor Address=" + id, true);
+				}				
 			}			
 		}
 	}

@@ -55,5 +55,9 @@ public class TemperaturSensor implements Serializable{
 		return times.get(index);
 	}
 	
+	public void setName(String name){
+		this.name = name;
+	}
+	
 	
 }
