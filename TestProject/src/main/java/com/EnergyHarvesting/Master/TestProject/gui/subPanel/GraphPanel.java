@@ -220,6 +220,13 @@ public class GraphPanel extends PanelComponent{
 					float seconds = Calendar.getInstance().get(Calendar.SECOND);
 					float time = hour + minutes/60 + seconds/3600;
 					int index = sensors[i].getTemperatur().size()-1;
+					//for first point adjust time
+					if(index == 1){
+						temperature.setMinValueX(time-0.01f);
+						temperature.setMaxValueX(time+0.25f);
+						voltage.setMinValueX(time-0.01f);
+						voltage.setMaxValueX(time+0.25f);
+					}
 					temperature.addPoint(i, time , sensors[i].getTemperatur().get(index));
 					voltage.addPoint(i, time , sensors[i].getVoltage().get(index));
 					temperature.addGraphName(i, sensors[i].getName());
@@ -377,6 +384,17 @@ public class GraphPanel extends PanelComponent{
 					float minutes = calender.get(Calendar.MINUTE);
 					float seconds = Calendar.getInstance().get(Calendar.SECOND);
 					float time = hour + minutes/60 + seconds/3600;
+					//for first point adjust time
+					if(index == 1){
+						temperature.setMinValueX(time-0.01f);
+						voltage.setMinValueX(time-0.01f);
+						
+					}					
+					//for last adjust maxTime
+					if(index == sensors[i].getVoltage().size()-1){
+						temperature.setMaxValueX(time+0.01f);
+						voltage.setMaxValueX(time+0.01f);
+					}
 					temperature.addPoint(i, time , sensors[i].getTemperatur().get(index));
 					voltage.addPoint(i, time , sensors[i].getVoltage().get(index));
 				}				
