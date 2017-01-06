@@ -4,6 +4,7 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.PinEdge;
+import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
@@ -27,16 +28,21 @@ public class NRF24 implements NRF24_ReciverInterface{
 	private boolean[] dataStream = new boolean[maxBitNum];
 	private int dataCursor = 0;
 	
+	//debug
+	private int clkCounter = 0;
+	
 	//TemperatureSensore
-	private final static float refferenceVoltage = 3.3f;
+	private final static float refferenceVoltage = 3.0f;
 
 	public void init(){
 		Log.printInfoln("Initialized NRF24 - Interface", true);	
 		gpio = GpioFactory.getInstance();
-		clkPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
+		clkPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00, PinPullResistance.PULL_DOWN);
 		clkPinInit();
-		csPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_02);
-		dataPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_03);		
+		csPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_02, PinPullResistance.PULL_DOWN);
+		csPin.setShutdownOptions(true);
+		dataPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_03, PinPullResistance.PULL_DOWN);	
+		dataPin.setShutdownOptions(true);
 	}
 
 	private void clkPinInit(){
@@ -47,12 +53,16 @@ public class NRF24 implements NRF24_ReciverInterface{
 			public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
 				if(readData){
 					if(event.getEdge() == PinEdge.RISING){
-						dataStream[dataCursor] = dataPin.getState() == PinState.HIGH;
+						clkCounter++;
+						if(dataCursor < maxBitNum){
+							dataStream[maxBitNum-dataCursor-1] = (dataPin.getState() == PinState.HIGH);
+						}
 						dataCursor++;
-						if(dataCursor > maxBitNum-1){
+						if(dataCursor > maxBitNum){
 							readData = false;
 							Log.printErrorln("SWSPI_Controller Data Packet to long!");
 						}
+						
 					}
 				}
 			}
@@ -62,42 +72,53 @@ public class NRF24 implements NRF24_ReciverInterface{
 	private void waitForData(){
 		readData = true;
 		dataCursor = 0;
-		while(csPin.isLow()){
-			//wait for Data...
+		clkCounter = 0;
+		Log.println("recived Data!:");
+		while(csPin.isLow() && readData){
 			try {
-				Thread.sleep(10);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				Log.printErrorln(e.toString());
+				e.printStackTrace();
 			}
+			break;
 		}
-		data = interpretByteCode();
+		
+		if(clkCounter == 40){
+			data = interpretByteCode();
+		}else{
+			data = null;
+			Log.println("recived false message != 40 bit!");
+		}		
 		dataCursor = 0;
 		readData = false;
 	}
 	
 	private SensorData interpretByteCode(){
 		int addres = 0;
-		for(int i = 32; i < 39; i++){
+		for(int i = 7; i >= 0; i--){
 			if(dataStream[i]){
-				addres+=Math.pow(2, i-32);
+				addres+=Math.pow(2, 7-i);
 			}
 		}
 		float temperature = 0;
-		for(int i = 16; i < 26; i++){
+		for(int i = 23; i >= 8; i--){
 			if(dataStream[i]){
-				temperature+=Math.pow(2, i-16);
+				temperature+=Math.pow(2, 23-i);
 			}
 		}
-		temperature = calculValue(temperature);
+		
 		
 		float voltage = 0;
-		for(int i = 0; i < 10; i++){
+		for(int i = 39; i >= 24; i--){
 			if(dataStream[i]){
-				voltage+=Math.pow(2, i);
+				voltage+=Math.pow(2, 39-i);
 			}
 		}
-		voltage = calculValue(voltage);
 		
+		temperature = (calculValue(temperature)-0.111f)*1.056f;
+		voltage = (calculValue(voltage)-0.111f)*1.056f;
+		temperature = (temperature-0.5f)*100;
+		Log.println("Addres: " + addres + " temp: " + temperature + " volt: " + voltage);
 		if(addres > 15){
 			Log.printErrorln("Data: addres is to big! -> " + addres);
 			return null;
