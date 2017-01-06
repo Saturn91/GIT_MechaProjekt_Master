@@ -1,6 +1,7 @@
 package com.EnergyHarvesting.Master.TestProject.gui.subPanel;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -30,6 +31,8 @@ public class SettingPanel extends PanelComponent{
 	private JButton loadBtn;
 	private JButton clearLineInCMDBtn;
 	private JTextField loadPath;
+	
+	private int textSize = 8;
 	
 	private int x_Devider1 = 175;
 	
