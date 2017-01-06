@@ -24,7 +24,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 
 import logger.Log;
-import nrf24_Reciver.NRF24_Dummy;
+import nrf24_Reciver.NRF24;
 import nrf24_Reciver.NRF24_ReciverInterface;
 
 import com.EnergyHarvesting.Master.TestProject.gui.GUI;
@@ -104,8 +104,8 @@ public class App
     	}
     	
     	//Setup NRF24_Recierver
-    	NRF24_ReciverInterface nrf24Dummy = new NRF24_Dummy();
-    	nrf24Dummy.init();
+    	NRF24_ReciverInterface nrf24 = new NRF24();
+    	nrf24.init();
         
         //Setup Controller
         _controller = new Controller();
@@ -115,7 +115,7 @@ public class App
         //Main loop of application (exits if program or window gets closed)
         while(true){
         	//---------read SPI-Data-----------
-        	_controller.handleData(nrf24Dummy.getData());
+        	_controller.handleData(nrf24.getData());
         	
         	//------Display Changes in Gui------
         	if(withGui){

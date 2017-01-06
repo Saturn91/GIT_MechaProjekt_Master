@@ -4,11 +4,12 @@ import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.PinEdge;
-import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
+
+import logger.Log;
 
 public class NRF24 implements NRF24_ReciverInterface{
 
@@ -30,6 +31,7 @@ public class NRF24 implements NRF24_ReciverInterface{
 	private final static float refferenceVoltage = 3.3f;
 
 	public void init(){
+		Log.printInfoln("Initialized NRF24 - Interface", true);	
 		gpio = GpioFactory.getInstance();
 		clkPin = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00);
 		clkPinInit();
@@ -49,7 +51,7 @@ public class NRF24 implements NRF24_ReciverInterface{
 						dataCursor++;
 						if(dataCursor > maxBitNum-1){
 							readData = false;
-							System.err.println("SWSPI_Controller Data Packet to long!");
+							Log.printErrorln("SWSPI_Controller Data Packet to long!");
 						}
 					}
 				}
@@ -65,7 +67,7 @@ public class NRF24 implements NRF24_ReciverInterface{
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				Log.printErrorln(e.toString());
 			}
 		}
 		data = interpretByteCode();
@@ -97,7 +99,7 @@ public class NRF24 implements NRF24_ReciverInterface{
 		voltage = calculValue(voltage);
 		
 		if(addres > 15){
-			System.err.println("Data: addres is to big! -> " + addres);
+			Log.printErrorln("Data: addres is to big! -> " + addres);
 			return null;
 		}
 		
