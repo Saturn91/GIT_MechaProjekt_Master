@@ -162,6 +162,12 @@ public class App
     	return new SimpleDateFormat("dd:MM:yy : HH:mm:ss").format(date);
     }
     
+    public static Date getDateAsDate(){
+    	nowTime = System.currentTimeMillis();
+    	date = new Date(nowTime);
+    	return date;
+    }
+    
     public static boolean isWithGui(){
     	return withGui;
     }

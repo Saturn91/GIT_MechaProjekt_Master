@@ -2,6 +2,9 @@ package controler;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
+
+import com.EnergyHarvesting.Master.TestProject.App;
 
 public class TemperaturSensor implements Serializable{
 	private String name;
@@ -10,7 +13,7 @@ public class TemperaturSensor implements Serializable{
 	private int address;
 	private boolean newData = false;
 	
-	private ArrayList<Long> times = new ArrayList<Long>();
+	private ArrayList<Float> times = new ArrayList<Float>();
 	
 	public TemperaturSensor(int address, String name) {
 		this.name = name;
@@ -22,7 +25,7 @@ public class TemperaturSensor implements Serializable{
 	public void addData(float voltage, float temperatur){
 		this.temperature.add(temperatur);
 		this.voltage.add(voltage);
-		this.times.add(System.currentTimeMillis());
+		this.times.add(0.0f);
 		this.newData = true;
 	}
 	
@@ -51,8 +54,12 @@ public class TemperaturSensor implements Serializable{
 		newData = false;
 	}
 	
-	public long getTime(int index){
+	public float getTime(int index){
 		return times.get(index);
+	}
+	
+	public void setTime(int index, float time){
+		times.set(index, time);
 	}
 	
 	public void setName(String name){
