@@ -28,8 +28,8 @@ public class NRF24_Dummy implements NRF24_ReciverInterface{
 	
 	private long lastTime= 0;
 	private long nowTime;
-	private int maxDelta = 40000;
-	private int minDelta = 30000;
+	private int maxDelta = 10000;
+	private int minDelta = 5000;
 	private int delta = 0;
 	
 	private byte[] byteSendSimulation(){

@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat;
 
 import logger.Log;
 import nrf24_Reciver.NRF24;
-import nrf24_Reciver.NRF24_Dummy;
 import nrf24_Reciver.NRF24_ReciverInterface;
 
 import com.EnergyHarvesting.Master.TestProject.gui.GUI;
@@ -106,7 +105,7 @@ public class App
     	}
     	
     	//Setup NRF24_Recierver
-    	NRF24_ReciverInterface nrf24 = new NRF24_Dummy();
+    	NRF24_ReciverInterface nrf24 = new NRF24();
     	nrf24.init();
         
         //Setup Controller
@@ -152,8 +151,9 @@ public class App
     	}    	
     }
     
-    public static void clear(){
-    	 _controller = new Controller();
+    public static void clearController(){
+    	_controller = new Controller();
+    	setController(_controller);
     }
     
     public static String getDate(){
