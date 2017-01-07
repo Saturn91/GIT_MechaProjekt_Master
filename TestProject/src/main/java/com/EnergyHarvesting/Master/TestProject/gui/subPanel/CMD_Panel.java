@@ -19,7 +19,7 @@ public class CMD_Panel extends PanelComponent{
 	private JLabel title;
 	private ArrayList<Line> lines = new ArrayList<Line>();
 	private ArrayList<Line> newLines = new ArrayList<Line>();
-	private int maxLines = 10;
+	private int maxLines = 9;
 
 	public CMD_Panel(int x, int y, int width, int height, int maxLines) {
 		super(x, y, width, height);
