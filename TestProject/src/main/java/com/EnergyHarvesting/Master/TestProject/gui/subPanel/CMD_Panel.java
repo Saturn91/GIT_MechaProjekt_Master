@@ -1,7 +1,6 @@
 package com.EnergyHarvesting.Master.TestProject.gui.subPanel;
 
 import java.awt.Color;
-import java.awt.TextArea;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
@@ -11,15 +10,13 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 
-import logger.Log;
-
 public class CMD_Panel extends PanelComponent{
 	
 	private JTextPane cmd_Output;
 	private JLabel title;
 	private ArrayList<Line> lines = new ArrayList<Line>();
 	private ArrayList<Line> newLines = new ArrayList<Line>();
-	private int maxLines = 9;
+	private int maxLines = 10;
 
 	public CMD_Panel(int x, int y, int width, int height, int maxLines) {
 		super(x, y, width, height);
