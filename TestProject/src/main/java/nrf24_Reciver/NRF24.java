@@ -27,10 +27,10 @@ public class NRF24 implements NRF24_ReciverInterface{
 	private final int maxBitNum = 40;
 	private boolean[] dataStream = new boolean[maxBitNum];
 	private int dataCursor = 0;
-	
+
 	//debug
 	private int clkCounter = 0;
-	
+
 	//TemperatureSensore
 	private final static float refferenceVoltage = 3.0f;
 
@@ -62,7 +62,7 @@ public class NRF24 implements NRF24_ReciverInterface{
 							readData = false;
 							Log.printErrorln("SWSPI_Controller Data Packet to long!");
 						}
-						
+
 					}
 				}
 			}
@@ -82,7 +82,7 @@ public class NRF24 implements NRF24_ReciverInterface{
 			}
 			break;
 		}
-		
+
 		if(clkCounter == 40){
 			data = interpretByteCode();
 		}else{
@@ -92,41 +92,81 @@ public class NRF24 implements NRF24_ReciverInterface{
 		dataCursor = 0;
 		readData = false;
 	}
-	
+
 	private SensorData interpretByteCode(){
-		int addres = 0;
-		for(int i = 7; i >= 0; i--){
-			if(dataStream[i]){
-				addres+=Math.pow(2, 7-i);
+		if(checkData()){
+			int addres = 0;
+			for(int i = 7; i >= 4; i--){
+				if(dataStream[i]){
+					addres+=Math.pow(2, 7-i);
+				}
 			}
-		}
-		float temperature = 0;
-		for(int i = 23; i >= 8; i--){
-			if(dataStream[i]){
-				temperature+=Math.pow(2, 23-i);
+			float temperature = 0;
+			for(int i = 23; i >= 14; i--){
+				if(dataStream[i]){
+					temperature+=Math.pow(2, 23-i);
+				}
 			}
-		}
-		
-		
-		float voltage = 0;
-		for(int i = 39; i >= 24; i--){
-			if(dataStream[i]){
-				voltage+=Math.pow(2, 39-i);
+
+
+			float voltage = 0;
+			for(int i = 39; i >= 30; i--){
+				if(dataStream[i]){
+					voltage+=Math.pow(2, 39-i);
+				}
 			}
-		}
-		
-		temperature = (calculValue(temperature)-0.111f)*1.056f;
-		voltage = (calculValue(voltage)-0.111f)*1.056f;
-		temperature = (temperature-0.5f)*100;
-		Log.println("Addres: " + addres + " temp: " + temperature + " volt: " + voltage);
-		if(addres > 15){
-			Log.printErrorln("Data: addres is to big! -> " + addres);
+
+			temperature = (calculValue(temperature)-0.111f)*1.056f;
+			voltage = (calculValue(voltage)-0.111f)*1.056f;
+			temperature = (temperature-0.5f)*100;
+			Log.println("Addres: " + addres + " temp: " + temperature + " volt: " + voltage);
+			if(addres > 15){
+				Log.printErrorln("Data: addres is to big! -> " + addres);
+				return null;
+			}
+
+			return new SensorData((byte) addres, temperature, voltage);
+		}else{
+			Log.println("Bit Failure!");
 			return null;
-		}
-		
-		return new SensorData((byte) addres, temperature, voltage);
+		}		
 	}
-	
+
+	private boolean checkData(){
+		//checkAddres (first Byte: Bit5-8=addres, Bit1-4 = not addres) 
+		for(int i = 7; i >= 4; i--){
+			if(dataStream[i] == dataStream[i-4]){
+				return false;
+			}
+		}
+
+		//checkTemperature 2nd and 3rd Byte, first 6Bit = check last 10Bits = data
+		for(int i = 0; i < 5; i++){
+			if(dataStream[23-(i*2)] ^ dataStream[23-(i*2)-1] != dataStream[13-i]){
+				return false;
+			}
+		}
+
+		//check Temperature checkSum
+		if(dataStream[8] != dataStream[9] ^ dataStream[10] ^ dataStream[11] ^ dataStream[12] ^ dataStream[13]){
+			return false;
+		}
+
+		//checkVoltage 4nd and 5rd Byte, first 6Bit = check last 10Bits = data
+		for(int i = 0; i < 5; i++){
+			if(dataStream[39-(i*2)] ^ dataStream[39-(i*2)-1] != dataStream[29-i]){
+				return false;
+			}
+		}
+
+		//check Temperature checkSum
+		if(dataStream[24] != dataStream[25] ^ dataStream[26] ^ dataStream[27] ^ dataStream[28] ^ dataStream[29]){
+			return false;
+		}
+
+		return true;
+	}
+
 	private float calculValue(float temperatureIn){
 		return temperatureIn/1024*refferenceVoltage;
 	}
