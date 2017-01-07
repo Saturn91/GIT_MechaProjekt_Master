@@ -57,6 +57,7 @@ public class App
 	
 	//---------Controller------
 	private static Controller _controller;
+	private static boolean _record = false;
 	private static GUI gui;
 	//--------\Controller------
 	
@@ -116,7 +117,9 @@ public class App
         while(true){
         	//---------read SPI-Data-----------
         	_controller.update();
-        	_controller.handleData(nrf24.getData());
+        	if(_record){
+        		_controller.handleData(nrf24.getData());
+        	}        	
         	
         	//------Display Changes in Gui------
         	if(withGui){
@@ -148,6 +151,11 @@ public class App
     	}    	
     }
     
+    public static void clearController(){
+    	_controller = new Controller();
+    	setController(_controller);
+    }
+    
     public static String getDate(){
     	nowTime = System.currentTimeMillis();
     	date.setTime(nowTime);
@@ -158,11 +166,22 @@ public class App
     	return withGui;
     }
     
+    public static void setRecord(boolean record){
+    	_record = record;
+    }
+    
     public static void setController(Controller controller){
     	_controller = controller;
     	if(withGui){
     		gui.setData(_controller);
     		gui.clearGraphPanel();
     	}  
+    }
+    
+    public static void save(){
+		String date = getDate().replaceAll(":", "");
+		date = date.replaceAll(" ", "_");
+		_controller.save(date +"Data"+".data");
+		Log.saveLogFile();    	
     }
 }
