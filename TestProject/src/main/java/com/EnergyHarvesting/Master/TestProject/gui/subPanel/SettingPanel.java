@@ -35,6 +35,13 @@ public class SettingPanel extends PanelComponent{
 	private JButton loadBtn;
 	private JFileChooser chooser = new JFileChooser();
 	private String loadPath;
+	private boolean load = false;
+	
+	//Record
+	private JCheckBox recordBox;
+	private JLabel recordLabel;
+	private boolean recordFlag = false;
+	private boolean recordState = false;
 	
 	private JButton clearLineInCMDBtn;
 	private static JTextField[] sensorNamesFields = new JTextField[16];
@@ -65,8 +72,9 @@ public class SettingPanel extends PanelComponent{
 		initDebug(20, 45);	
 		initWriteLogFile(20, 70);
 		initSaveTime(20, 95, ""+App.saveTimeMIN);
-		initClearButton(20, 120);
-		initLoadBtn(20, 145);
+		initRecord(20, 120);
+		initClearButton(20, 145);
+		initLoadBtn(20, 160);
 		initFileChooser();
 		initSensorNames(280, 20);		
 	}
@@ -81,6 +89,16 @@ public class SettingPanel extends PanelComponent{
 		if(saveTimeFlag){
 			updateSaveTime();
 			saveTimeFlag = false;
+		}
+		
+		if(recordFlag){
+			App.setRecord(recordState);
+			if(recordState){
+				Log.printInfoln("recording = true", true);
+			}else{
+				Log.printInfoln("recording = false", true);
+			}
+			recordFlag = false;
 		}
 		
 		Log.debug = loggerFlag;
@@ -176,24 +194,6 @@ public class SettingPanel extends PanelComponent{
 		saveTimeLabel.setBounds(x, y, x_Devider1, 20);		
 	}
 	
-	private boolean load = false;
-	/*private void initLoadBtn(int x, int y){
-		loadBtn = new JButton("Load Data");
-		loadBtn.setFont(font);
-		loadBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				load = true;
-			}
-		});
-		
-		loadPath = new JTextField("Filepath.data");
-		loadPath.setFont(font);
-		add(loadBtn);
-		add(loadPath);
-		loadBtn.setBounds(x, y, 110, 20);
-		loadPath.setBounds(x, y+25, 250, 20);
-	}*/
-	
 	private void initLoadBtn(int x, int y){
 		loadBtn = new JButton("Load Data");
 		loadBtn.setFont(font);
@@ -229,6 +229,30 @@ public class SettingPanel extends PanelComponent{
 		});
 		add(clearLineInCMDBtn);
 		clearLineInCMDBtn.setBounds(x, y, 110, 20);
+	}
+	
+	private void initRecord(int x, int y){
+		recordBox = new JCheckBox();
+		recordBox.setFont(font);
+		recordLabel = new JLabel("record: ");
+		recordLabel.setFont(font);
+		add(recordLabel);
+		add(recordBox);
+		recordBox.setBounds(x+x_Devider1+10, y, 20, 20);
+		recordLabel.setBounds(x, y, x_Devider1, 20);
+		
+		recordBox.addItemListener(new ItemListener() {
+			
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {//checkbox has been selected
+					recordFlag = true;
+					recordState = true;
+		        } else {//checkbox has been deselected
+		        	recordFlag = true;
+					recordState = false;
+		        };				
+			}
+		});
 	}
 	
 	public boolean deleteCMDLine(){
@@ -269,7 +293,6 @@ public class SettingPanel extends PanelComponent{
 	}
 	
 	public static String[] getSensorNames(){
-		//update SensorNames
 		return sensorNames;
 	}
 	

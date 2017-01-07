@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 
 import logger.Log;
 import nrf24_Reciver.NRF24;
+import nrf24_Reciver.NRF24_Dummy;
 import nrf24_Reciver.NRF24_ReciverInterface;
 
 import com.EnergyHarvesting.Master.TestProject.gui.GUI;
@@ -57,6 +58,7 @@ public class App
 	
 	//---------Controller------
 	private static Controller _controller;
+	private static boolean _record = false;
 	private static GUI gui;
 	//--------\Controller------
 	
@@ -104,7 +106,7 @@ public class App
     	}
     	
     	//Setup NRF24_Recierver
-    	NRF24_ReciverInterface nrf24 = new NRF24();
+    	NRF24_ReciverInterface nrf24 = new NRF24_Dummy();
     	nrf24.init();
         
         //Setup Controller
@@ -116,7 +118,9 @@ public class App
         while(true){
         	//---------read SPI-Data-----------
         	_controller.update();
-        	_controller.handleData(nrf24.getData());
+        	if(_record){
+        		_controller.handleData(nrf24.getData());
+        	}        	
         	
         	//------Display Changes in Gui------
         	if(withGui){
@@ -148,6 +152,10 @@ public class App
     	}    	
     }
     
+    public static void clear(){
+    	 _controller = new Controller();
+    }
+    
     public static String getDate(){
     	nowTime = System.currentTimeMillis();
     	date.setTime(nowTime);
@@ -158,11 +166,22 @@ public class App
     	return withGui;
     }
     
+    public static void setRecord(boolean record){
+    	_record = record;
+    }
+    
     public static void setController(Controller controller){
     	_controller = controller;
     	if(withGui){
     		gui.setData(_controller);
     		gui.clearGraphPanel();
     	}  
+    }
+    
+    public static void save(){
+		String date = getDate().replaceAll(":", "");
+		date = date.replaceAll(" ", "_");
+		_controller.save(date +"Data"+".data");
+		Log.saveLogFile();    	
     }
 }
