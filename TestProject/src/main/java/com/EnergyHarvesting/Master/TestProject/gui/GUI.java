@@ -20,7 +20,7 @@ public class GUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	//------------Window Config------------
-	private static final String title = "Energie Harvesting Project - Master";
+	private static final String title = "Energie Harvesting Project - Master: READ ONLY!!!!";
 	
 	private static final int width = 1350;
 	private static final int height = 950;

@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 
 import logger.Log;
 import nrf24_Reciver.NRF24;
+import nrf24_Reciver.NRF24_Dummy;
 import nrf24_Reciver.NRF24_ReciverInterface;
 
 import com.EnergyHarvesting.Master.TestProject.gui.GUI;
@@ -105,13 +106,13 @@ public class App
     	}
     	
     	//Setup NRF24_Recierver
-    	NRF24_ReciverInterface nrf24 = new NRF24();
+    	NRF24_ReciverInterface nrf24 = new NRF24_Dummy();
     	nrf24.init();
         
         //Setup Controller
         _controller = new Controller();
         
-        Log.printInfoln("started Masterprogram", true);
+        Log.printInfoln("started Masterprogram - READ ONLY!!!", true);
         
         //Main loop of application (exits if program or window gets closed)
         while(true){
