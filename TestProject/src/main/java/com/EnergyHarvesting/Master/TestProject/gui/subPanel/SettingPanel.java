@@ -1,17 +1,18 @@
 package com.EnergyHarvesting.Master.TestProject.gui.subPanel;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.EnergyHarvesting.Master.TestProject.App;
 import com.saturn91.saveToFile.SaveToFile;
@@ -21,6 +22,8 @@ import logger.Log;
 
 public class SettingPanel extends PanelComponent{
 	
+	private SettingPanel settingPanel;
+	
 	private JLabel titleSettings;
 	private JCheckBox log;
 	private JLabel logLabel;
@@ -28,9 +31,12 @@ public class SettingPanel extends PanelComponent{
 	private JLabel logFileLabel;
 	private JTextField saveTime;
 	private JLabel saveTimeLabel;	
+	//Filechooser
 	private JButton loadBtn;
+	private JFileChooser chooser = new JFileChooser();
+	private String loadPath;
+	
 	private JButton clearLineInCMDBtn;
-	private JTextField loadPath;
 	private static JTextField[] sensorNamesFields = new JTextField[16];
 	private JLabel[] sensorNamesLabels = new JLabel[16];
 	
@@ -46,6 +52,7 @@ public class SettingPanel extends PanelComponent{
 
 	public SettingPanel(int x, int y, int width, int height) {
 		super(x, y, width, height);
+		settingPanel = this;		
 	}
 
 	@Override
@@ -60,6 +67,7 @@ public class SettingPanel extends PanelComponent{
 		initSaveTime(20, 95, ""+App.saveTimeMIN);
 		initClearButton(20, 120);
 		initLoadBtn(20, 145);
+		initFileChooser();
 		initSensorNames(280, 20);		
 	}
 
@@ -169,7 +177,7 @@ public class SettingPanel extends PanelComponent{
 	}
 	
 	private boolean load = false;
-	private void initLoadBtn(int x, int y){
+	/*private void initLoadBtn(int x, int y){
 		loadBtn = new JButton("Load Data");
 		loadBtn.setFont(font);
 		loadBtn.addActionListener(new ActionListener() {
@@ -184,7 +192,30 @@ public class SettingPanel extends PanelComponent{
 		add(loadPath);
 		loadBtn.setBounds(x, y, 110, 20);
 		loadPath.setBounds(x, y+25, 250, 20);
-		
+	}*/
+	
+	private void initLoadBtn(int x, int y){
+		loadBtn = new JButton("Load Data");
+		loadBtn.setFont(font);
+		loadBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int result = chooser.showOpenDialog(settingPanel);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					File selectedFile = chooser.getSelectedFile();
+					loadPath = selectedFile.getPath();
+					load = true;
+				}				
+			}
+		});
+		add(loadBtn);
+		loadBtn.setBounds(x, y, 110, 20);
+	}
+	
+	private void initFileChooser(){	
+		chooser.setCurrentDirectory(new java.io.File("."));
+		chooser.setDialogTitle("Load Old Data");
+		chooser.setFileFilter(new FileNameExtensionFilter("Old Sensordata", "data"));
+		chooser.setBounds(20, 20, 500, 300);
 	}
 	
 	private void initClearButton(int x, int y){
@@ -209,14 +240,19 @@ public class SettingPanel extends PanelComponent{
 	}
 	
 	public void load(){
-		Log.printInfoln("Start load Data from: " + loadPath.getText(), true);
+		Log.printInfoln("Start load Data from: " + loadPath, true);
 		Controller loadController = null;
 		boolean loadError = false;
 		try {
+			long startTime = System.currentTimeMillis();
 			while(loadController == null){
-				loadController = (Controller) SaveToFile.getDataFromBinaryFile(loadPath.getText());
+				loadController = (Controller) SaveToFile.getDataFromBinaryFile(loadPath);
+				if(System.currentTimeMillis()-startTime >= 2000){
+					Log.printErrorln("Waitetd to long to load: "+ loadPath);
+					break;
+				}
 			}
-			Log.printInfoln("successfully loaded Data from: " + loadPath.getText(), true);
+			Log.printInfoln("successfully loaded Data from: " + loadPath, true);
 		} catch (Exception e2) {
 			loadError = true;
 		}
@@ -228,7 +264,7 @@ public class SettingPanel extends PanelComponent{
 		}			
 		
 		if(loadError){
-			Log.printErrorln("not able to load: " + loadPath.getText());
+			Log.printErrorln("not able to load: " + loadPath);
 		}
 	}
 	
