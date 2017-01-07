@@ -19,6 +19,7 @@ import com.saturn91.saveToFile.SaveToFile;
 
 import controler.Controller;
 import logger.Log;
+import nrf24_Reciver.NRF24;
 
 public class SettingPanel extends PanelComponent{
 
@@ -29,8 +30,16 @@ public class SettingPanel extends PanelComponent{
 	private JLabel logLabel;
 	private JCheckBox logFile;
 	private JLabel logFileLabel;
+
+	//SaveTime
 	private JTextField saveTime;
 	private JLabel saveTimeLabel;
+	private boolean saveTimeFlag = false;
+
+	//Reference voltage
+	private JTextField referencVoltageField;
+	private JLabel referencVoltageLabel;
+	private boolean referencVoltageFlag = false;
 
 	//Clear Controller
 	private JButton clearControllerBtn;
@@ -87,6 +96,7 @@ public class SettingPanel extends PanelComponent{
 		initSaveDataBtn(20, 195);
 		initClearControllerBtn(20, 220);
 		initFileChooser();
+		initReferencVoltage(20, 245);
 		initSensorNames(280, 20);		
 	}
 
@@ -103,7 +113,7 @@ public class SettingPanel extends PanelComponent{
 			load();
 			load = false;
 		}
-		
+
 		if(saveDataFlag){
 			App.save();
 			saveDataFlag = false;
@@ -112,6 +122,11 @@ public class SettingPanel extends PanelComponent{
 		if(saveTimeFlag){
 			updateSaveTime();
 			saveTimeFlag = false;
+		}
+		
+		if(referencVoltageFlag){
+			updateReferenceVoltage();
+			referencVoltageFlag = false;
 		}
 
 		if(recordFlag){
@@ -149,6 +164,30 @@ public class SettingPanel extends PanelComponent{
 			}
 			lastSaveTimeString = output;
 			saveTime.setText(output);
+		}		
+	}
+	
+	private String lastReferenceVoltageString = "";
+	private void updateReferenceVoltage(){
+		if(!lastReferenceVoltageString.equals(referencVoltageField.getText())){
+			String output = "";
+			float refVoltage = 0;
+			try {
+				refVoltage = Float.parseFloat(referencVoltageField.getText());
+				if(refVoltage != 0){
+					NRF24.setReferenceVoltage(refVoltage);
+					output = referencVoltageField.getText();
+					Log.printInfoln("changed referenceVoltage to " + refVoltage + " Volt", true);
+				}else{
+					output = "INVALID";
+					Log.printErrorln("can't change referenceVoltage to " + refVoltage);
+				}
+			} catch (Exception e) {
+				Log.printErrorln("SettingPanel: referenceVoltage: input is not a number!");
+				output = "INVALID";
+			}
+			lastReferenceVoltageString = output;
+			referencVoltageField.setText(output);
 		}		
 	}
 
@@ -198,7 +237,24 @@ public class SettingPanel extends PanelComponent{
 		});
 	}
 
-	private boolean saveTimeFlag = false;
+	private void initReferencVoltage(int x, int y){
+		referencVoltageField = new JTextField("NUM");
+		referencVoltageField.setFont(font);
+		referencVoltageLabel = new JLabel("reference Voltage:");
+		referencVoltageLabel.setFont(font);
+		referencVoltageField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				referencVoltageFlag = true;
+			}
+		});
+
+		add(referencVoltageField);
+		add(referencVoltageLabel);
+
+		referencVoltageField.setBounds(x+x_Devider1+15, y, 40, 20);
+		referencVoltageLabel.setBounds(x, y, x_Devider1, 20);		
+	}
+	
 	private void initSaveTime(int x, int y, String text){
 		saveTime = new JTextField(text);
 		saveTime.setFont(font);
@@ -319,7 +375,7 @@ public class SettingPanel extends PanelComponent{
 			while(loadController == null){
 				loadController = (Controller) SaveToFile.getDataFromBinaryFile(loadPath);
 				if(System.currentTimeMillis()-startTime >= 2000){
-					Log.printErrorln("Waitetd to long to load: "+ loadPath);
+					Log.printErrorln("Waited to long to load: "+ loadPath);
 					break;
 				}
 			}
