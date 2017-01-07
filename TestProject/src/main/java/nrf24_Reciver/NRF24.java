@@ -32,7 +32,7 @@ public class NRF24 implements NRF24_ReciverInterface{
 	private int clkCounter = 0;
 
 	//TemperatureSensore
-	private final static float refferenceVoltage = 3.0f;
+	private static float refferenceVoltage = 3.0f;
 
 	public void init(){
 		Log.printInfoln("Initialized NRF24 - Interface", true);	
@@ -182,5 +182,9 @@ public class NRF24 implements NRF24_ReciverInterface{
 			return dataSend;
 		}
 		return null;
+	}
+	
+	public static void setReferenceVoltage(float voltage){
+		refferenceVoltage = voltage;
 	}
 }
