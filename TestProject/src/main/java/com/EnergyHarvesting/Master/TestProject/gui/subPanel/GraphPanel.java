@@ -14,7 +14,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import com.saturn91.JGraph;
+import com.saturn91.jgraph.JGraph;
 
 import logger.Log;
 import controler.Controller;
